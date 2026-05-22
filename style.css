@@ -1,5 +1,5 @@
 /* =============================================
-   КОЗАЦЬКИЙ СЕРІАЛ — style.css
+   ��������� ��в�� � style.css
    ============================================= */
 * { box-sizing: border-box; }
 
@@ -17,7 +17,6 @@ body {
   right: 16px;
   z-index: 1000;
   display: flex;
-  align-items: center;
   gap: 6px;
 }
 .lang-btn {
@@ -59,81 +58,6 @@ body {
   max-width: 800px;
   padding: 20px;
   padding-top: 50px;
-}
-
-/* ===== АДМІН-ЛІЧИЛЬНИК (ХИТРИЙ) ===== */
-.counter-box {
-    display: none; 
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    transition: all 0.3s;
-}
-
-/* Вмикається динамічно через JS тільки для Тебе */
-.counter-box.admin-visible {
-    display: flex !important;
-    background: gold;          
-    border-radius: 20px;           
-    padding: 0 10px;              
-    height: 26px;                 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); 
-    margin-left: 10px;
-}
-
-.counter-box img {
-    display: block;
-    height: 14px;                 
-    width: auto;
-    filter: brightness(0) invert(0); 
-}
-
-/* ===== ЕКРАН БЛОКУВАННЯ НА 24 ГОДИНИ ===== */
-.blocked-screen {
-  position: fixed;
-  inset: 0;
-  background: #0f0f0f;
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-.blocked-card {
-  background: #1b1b1b;
-  padding: 30px;
-  border-radius: 16px;
-  border: 2px solid gold;
-  text-align: center;
-  max-width: 450px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-}
-.blocked-card h2 {
-  color: gold;
-  margin: 0 0 15px 0;
-  font-size: 22px;
-}
-.blocked-card p {
-  color: #ccc;
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 0 0 20px 0;
-}
-.blocked-time {
-  font-size: 32px;
-  font-weight: bold;
-  color: gold;
-  background: #252525;
-  padding: 10px 20px;
-  border-radius: 8px;
-  display: inline-block;
-  letter-spacing: 1px;
-  border: 1px solid #444;
-}
-.blocked-note {
-  margin-top: 20px !important;
-  font-style: italic;
-  color: #777 !important;
 }
 
 /* ===== AD SLOTS ===== */

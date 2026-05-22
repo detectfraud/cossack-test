@@ -262,7 +262,30 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-uk').addEventListener('click', () => setLang('uk'));
   document.getElementById('btn-en').addEventListener('click', () => setLang('en'));
 });
+// Тіньовий лічильник суто для адміна
+window.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('my-stats-counter');
+    
+    if (container) {
+        // Додаємо клас для майбутньої краси з CSS
+        container.classList.add('counter-box');
 
+        // Перевіряємо, чи це ти
+        if (localStorage.getItem('iamtheboss') === 'true') {
+            // Якщо це ти — генеруємо начинку і змушуємо її показатися
+            container.innerHTML = `
+                
+                <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fdetectfraud.github.io&count_bg=%23795548&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=views&edge_flat=false" alt="Hits"><p>Статистика сайту:</p>
+            `;
+            container.style.setProperty('display', 'block', 'important');
+        } else {
+            // Для решти світу — лічильник просто тихенько крутиться в тіні
+            container.innerHTML = `
+                <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fdetectfraud.github.io&count_bg=%23795548&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=views&edge_flat=false" alt="Hits" style="display:none!important;">
+            `;
+        }
+    }
+});
 // Старт ініціалізації мови
 (function () {
   const saved    = localStorage.getItem('lang');

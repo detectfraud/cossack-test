@@ -8,10 +8,20 @@
   <meta name="monetag" content="576250b2e4efbf523b07b865bbe248b0">
 </head>
 <body>
+
+<div id="js-task-completed-screen" class="blocked-screen" style="display: none;">
+  <div class="blocked-card">
+    <h2>Козаче, серія вже активована! 🎬</h2>
+    <p>Ти вже підтримав нас сьогодні. Наступний випадковий трек буде доступний завтра о:</p>
+    <div class="blocked-time" id="js-tomorrow-time-screen">00:00</div>
+    <p class="blocked-note">Повертайся за добу, чекаємо на тебе!</p>
+  </div>
+</div>
+
 <div class="lang-switcher">
   <button class="lang-btn active" id="btn-uk">UA</button>
   <button class="lang-btn"        id="btn-en">EN</button>
-<div id="my-stats-counter"></div>
+  <div id="my-stats-counter"></div>
 </div>
 
 <div class="wrapper">
@@ -42,7 +52,7 @@
         </div>
         <p class="fb-post-text" id="js-post-text"></p>
         
-<div class="video-container" style="position: relative;">
+        <div class="video-container" style="position: relative;">
           <div id="js-video-overlay" style="position: absolute; inset: 0; z-index: 10; cursor: pointer; background: rgba(0,0,0,0);"></div>
 
           <div id="js-thanks-overlay" style="display: none; position: absolute; inset: 0; z-index: 11; background: rgba(15, 15, 15, 0.95); align-items: center; justify-content: center; padding: 20px; text-align: center; border: 2px solid gold; border-radius: inherit;">
@@ -63,7 +73,7 @@
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen>
-          </iframe>
+          </table>
         </div>
 
         <div class="fb-stats">
@@ -108,11 +118,8 @@
 
 <div class="sticky" id="js-sticky"></div>
 
-<script>(function(s){s.dataset.zone='11040513',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>   
-
+<script>(function(s){s.dataset.zone='11040513',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>  
 <script src="main.js"></script>
-
-
 
 </body>
 </html>

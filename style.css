@@ -59,7 +59,68 @@ body {
   padding: 20px;
   padding-top: 50px;
 }
+/* Лічильник у точній фактурі активної мовної кнопки */
+.counter-box {
+    display: none; /* Керується через JS */
+    align-items: center;
+    justify-content: center;
+    
+    /* Фактура та колір активної кнопки (як UA) */
+    background: gold;          /* Твій яскраво-жовтий фірмовий колір */
+    border: none;                 /* Якщо у кнопок немає рамки, прибираємо її */
+    border-radius: 4px;           /* Закруглення кутів як у lang-btn */
+    padding: 0 12px;              /* Внутрішні відступи для правильної ширини */
+    height: 28px;                 /* Точна висота твоїх мовних кнопок */
+    box-sizing: border-box;
+    
+    /* Позиціонування та вирівнювання вгорі */
+    float: left;                  
+    margin-left: 15px;            /* Відступ від лівого краю екрана */
+    margin-top: 2px;             /* Підкрути цей марджин (більше/менше), щоб виставити ідеальну лінію з UA/EN */
+    
+    /* Ефект об'єму/фактури, якщо кнопки мають легку тінь */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+    cursor: default;
+}
 
+/* Стиль для тексту всередині лічильника (на локалці) */
+.counter-box span {
+    font-size: 12px;              /* Розмір шрифту як на кнопках мови */
+    font-weight: bold;            /* Жирний, як UA */
+    color: #000000;               /* Чорний текст на жовтому тлі */
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Стиль для картинки, коли завантажиш на GitHub */
+.counter-box img {
+    display: block;
+    height: 16px;                 /* Акуратний розмір картинки всередині жовтої кнопки */
+    width: auto;
+    /* Якщо картинка лічильника буде занадто світлою, можна додати фільтр */
+    filter: brightness(0) invert(0); /* Залишає її темною/контрастною */
+}
+
+.counter-box {
+    display: none; /* Керується через JS */
+    align-items: center;
+    justify-content: center;
+    
+    /* ЗАФІКСОВУЄМО ВГОРІ: */
+    position: fixed;
+    top: 10px;           /* Точна відстань від верху екрана, як у UA/EN */
+    left: 15px;          /* Відстань від лівого краю екрана */
+    z-index: 9999;       /* Щоб лічильник завжди був поверх відео та інших блоків */
+
+    /* Все інше (колір, висоту, padding) вже завтра спокійно підкрутиш під себе */
+    background: gold;          
+    border-radius: 20px;           
+    padding: 0 12px;              
+    height: 28px;                 
+    box-sizing: border-box;
+    cursor: default;
+}
 /* ===== AD SLOTS ===== */
 .ad {
   background: #1e1e1e;

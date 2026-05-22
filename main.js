@@ -1,5 +1,5 @@
 /* =============================================
-   КОЗАЦЬКИЙ СЕРІАЛ — main.js (Виправлений)
+   КОЗАЦЬКИЙ СЕРІАЛ — main.js (Оновлений)
    ============================================= */
 
 const POST_CONFIG = {
@@ -18,7 +18,7 @@ const I18N = {
     sub:            "Відео, яке зібрало мільйони переглядів в Facebook, стало початком серії мемів про козаків.",
     before_video:   "Перша серія, з якої все почалося 👇",
     donate_heading: "❤️ Підтримати серіал",
-    donate_text:    "Ми створюємо цей серіал власним коштом.<br>AI-сервіси, generation сцен, монтаж та створення нових серій потребують ресурсів.<br>Якщо тобі подобається цей проєкт — підтримай його розвиток ❤️",
+    donate_text:    "Ми створюємо цей серіал власним коштом.<br>AI-сервіси, генерація сцен, монтаж та створення нових серій потребують ресурсів.<br>Якщо тобі подобається цей проєкт — підтримай його розвиток ❤️",
     donate_btn:     "Підтримати серіал",
     ads_heading:    "📢 Монетизація",
     ads_text:       "Реклама допомагає випускати нові серії та підтримувати проєкт.<br>Дякуємо за підтримку ❤️",
@@ -55,10 +55,12 @@ const I18N = {
   }
 };
 
+// Глобальні прапорці безпеки
 window._isAdblockDetected = false;
 const keyTimeHash = "u_data_ts";      
 const keyStringHash = "u_data_str";  
 
+// Функції інкогніто-маскування LocalStorage
 function maskData(value) {
   return btoa("czk_" + value + "_czk");
 }
@@ -70,6 +72,7 @@ function unmaskData(maskedValue) {
   } catch (e) { return ''; }
 }
 
+// Виносимо функцію активації повідомлень у глобальну зону, щоб i18n міг її викликати
 window.showAdblockMessage = function() {
   window._isAdblockDetected = true;
   const lang = window._currentLang || 'uk';
@@ -137,10 +140,11 @@ function setLang(lang) {
   document.getElementById('js-post-text').textContent      = t.post_text;
   document.getElementById('js-donate-heading').textContent = t.donate_heading;
   
+  // Використовуємо innerHTML, бо в текстах тепер є теги <br>
   document.getElementById('js-donate-text').innerHTML     = t.donate_text;
   document.getElementById('js-ads-text').innerHTML        = t.ads_text;
   
-  document.getElementById('js-donate-btn').innerHTML       = '💰 ' + t.donate_btn;
+  document.getElementById('js-donate-btn').textContent     = '💰 ' + t.donate_btn;
   document.getElementById('js-ads-heading').textContent    = t.ads_heading;
   document.getElementById('js-next').textContent           = t.next;
 
@@ -171,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const tomorrowTimeScreen = document.getElementById('js-tomorrow-time-screen');
   const tomorrowTimeThanks = document.getElementById('js-tomorrow-time-thanks');
 
-  // --- 1. ПЕРЕВІРКА БЛОКУВАННЯ ПРИ ВХОДІ ---
+  // --- 1. ПЕРЕВІРКА БЛОКУВАННЯ ПРИ ВХОДІ / REFRESH ---
   const rawSavedTime = localStorage.getItem(keyTimeHash);
   const taskSavedTime = unmaskData(rawSavedTime);
   const userDonated = localStorage.getItem('user_donated'); 
@@ -179,21 +183,23 @@ document.addEventListener('DOMContentLoaded', () => {
   if (taskSavedTime && !userDonated) {
     const now = new Date().getTime();
     if (now < parseInt(taskSavedTime)) {
+      // Зчитуємо замаскований час
       const savedTimeString = unmaskData(localStorage.getItem(keyStringHash));
       if (tomorrowTimeScreen) tomorrowTimeScreen.textContent = savedTimeString;
       
+      // Активуємо екран-заглушку, ховаючи основний контент
       if (completedScreen) {
-        completedScreen.style.setProperty('display', 'flex', 'important');
-        
-        // Ховаємо весь контент, окрім самого екрана блокування
+        document.body.style.background = "#0f0f0f";
+        completedScreen.style.display = 'flex';
         Array.from(document.body.children).forEach(child => {
           if (child !== completedScreen && child.tagName !== 'SCRIPT' && child.tagName !== 'STYLE') {
             child.style.display = 'none';
           }
         });
       }
-      return; 
+      return; // Зупиняємо роботу інтерфейсу
     } else {
+      // Таймер закінчився — очищуємо ключі
       localStorage.removeItem(keyTimeHash);
       localStorage.removeItem(keyStringHash);
     }
@@ -204,12 +210,14 @@ document.addEventListener('DOMContentLoaded', () => {
     overlay.addEventListener('click', (e) => {
       e.preventDefault();
 
+      // Запускаємо монетизацію у новій вкладці
       const targetUrl = "https://omg10.com/4/11041132";
       const newWindow = window.open(targetUrl, '_blank');
       if (newWindow) {
         newWindow.opener = null;
       }
 
+      // Розрахунок часу на завтра: 24 години + рандом від 2 до 20 хвилин
       const currentTime = new Date();
       const randomMinutes = Math.floor(Math.random() * (20 - 2 + 1)) + 2; 
       const unlockTimeObj = new Date(currentTime.getTime() + (24 * 60 * 60 * 1000) + (randomMinutes * 60 * 1000));
@@ -218,11 +226,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const minutes = String(unlockTimeObj.getMinutes()).padStart(2, '0');
       const timeString = `${hours}:${minutes}`;
 
+      // Кодуємо в Base64 та ховаємо в localStorage
       localStorage.setItem(keyTimeHash, maskData(unlockTimeObj.getTime().toString()));
       localStorage.setItem(keyStringHash, maskData(timeString));
 
+      // Виводимо час на плашку швидкої подяки
       if (tomorrowTimeThanks) tomorrowTimeThanks.textContent = timeString;
 
+      // Стартуємо відео
       setTimeout(() => {
         player.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
         overlay.style.display = 'none'; 
@@ -230,12 +241,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- 3. ВІДСТЕЖЕННЯ ЗАКІНЧЕННЯ РОЛИКА ---
+  // --- 3. ВІДСТЕЖЕННЯ ЗАКІНЧЕННЯ РОЛИКА (YOUTUBE API) ---
   window.addEventListener('message', (event) => {
     if (event.origin.includes('youtube.com')) {
       try {
         const data = JSON.parse(event.data);
         if (data.event === 'infoDelivery' && data.info && data.info.playerState === 0) {
+          // Якщо юзер не донатер, поверх плеєра з'являється подяка
           if (thanksOverlay && !localStorage.getItem('user_donated')) {
             thanksOverlay.style.display = 'flex';
           }
@@ -250,29 +262,30 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-uk').addEventListener('click', () => setLang('uk'));
   document.getElementById('btn-en').addEventListener('click', () => setLang('en'));
 });
-
 // Тіньовий лічильник суто для адміна
 window.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('my-stats-counter');
     
     if (container) {
+        // Додаємо клас для майбутньої краси з CSS
         container.classList.add('counter-box');
 
+        // Перевіряємо, чи це ти
         if (localStorage.getItem('iamtheboss') === 'true') {
+            // Якщо це ти — генеруємо начинку і змушуємо її показатися
             container.innerHTML = `
-                <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fdetectfraud.github.io&count_bg=%23795548&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=views&edge_flat=false" alt="Hits">
+                
+                <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fdetectfraud.github.io&count_bg=%23795548&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=views&edge_flat=false" alt="Hits"><p>Статистика сайту:</p>
             `;
-            container.classList.add('admin-visible');
+            container.style.setProperty('display', 'block', 'important');
         } else {
-            // Для всього іншого світу лічильник невидимий і прозорий, але запит на інкремент (incr) відправляється!
+            // Для решти світу — лічильник просто тихенько крутиться в тіні
             container.innerHTML = `
                 <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fdetectfraud.github.io&count_bg=%23795548&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=views&edge_flat=false" alt="Hits" style="display:none!important;">
             `;
-            container.style.display = 'none';
         }
     }
 });
-
 // Старт ініціалізації мови
 (function () {
   const saved    = localStorage.getItem('lang');

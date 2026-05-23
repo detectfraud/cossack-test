@@ -5,9 +5,7 @@
 const POST_CONFIG = {
   likes:    "101 тис.",
   comments: "15 тис.",
-  shares:   "2 тис."/*,
-  author:   "Козак-Веселун",
-  date:     "21 травня"*/
+  shares:   "2 тис."
 };
 
 const I18N = {
@@ -158,8 +156,6 @@ function setLang(lang) {
   document.getElementById('js-tooltip-title').textContent = t.tooltip_title;
   document.getElementById('js-tooltip-text').textContent  = t.tooltip_text;
 
-  document.getElementById('js-author-name').textContent = POST_CONFIG.author;
-  document.getElementById('js-post-date').textContent   = POST_CONFIG.date;
   document.getElementById('js-likes').textContent       = POST_CONFIG.likes;
   document.getElementById('js-comments').textContent    = POST_CONFIG.comments;
   document.getElementById('js-shares').textContent      = POST_CONFIG.shares;

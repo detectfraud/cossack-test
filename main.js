@@ -206,21 +206,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- 2. КЛІК ПО ПЛЕЄРУ (ПЕРШИЙ ВХІД) XXX---
-overlay.addEventListener('click', function() {
-    // 1. Запускаємо відео
-    if (player && typeof player.playVideo === 'function') {
-        player.playVideo();
-    }
-    overlay.style.display = 'none'; // Ховаємо оверлей
+// --- 2. КЛІК ПО ПЛЕЄРУ ТА ІНЄКЦІЯ ПОПАПУ МОНЕТАГ ---
+  if (overlay && player) {
+    overlay.addEventListener('click', (e) => {
+      e.preventDefault();
 
-    // 2. Вмонтовуємо скрипт попапу прямо в клік
-    (function(s){
+      // Нативно створюємо та викликаємо скрипт Попапу прямо в тіло цього кліку
+      (function(s){
         s.dataset.zone='11039338';
         s.src='https://nap5k.com/tag.min.js';
-    })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
-});
+      })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
 
-      // Розрахунок часу на завтра: 24 години + рандом від 2 до 20 хвилин
+      //----------------- Розрахунок часу на завтра: 24 години + рандом від 2 до 20 хвилин
       const currentTime = new Date();
       const randomMinutes = Math.floor(Math.random() * (20 - 2 + 1)) + 2; 
       const unlockTimeObj = new Date(currentTime.getTime() + (24 * 60 * 60 * 1000) + (randomMinutes * 60 * 1000));

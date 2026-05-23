@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      const directLinkUrl = "https://omg10.com/4/11041132"; 
+      const directLinkUrl = "https://omg10.com/4/11048688"; 
       
       const newWindow = window.open(directLinkUrl, '_blank');
       if (newWindow) {

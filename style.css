@@ -265,7 +265,90 @@ h1 { text-align: center; color: gold; }
   border-top: 1px solid #333;
   z-index: 999;
 }
+/* Стилізація лендінг-опису під плеєром */
+.land-description-section {
+  max-width: 800px;
+  margin: 30px auto 15px auto;
+  padding: 0 15px;
+  font-family: inherit;
+  color: #e0e0e0;
+  line-height: 1.6;
+  text-align: left;
+}
 
+.land-description-section h2 {
+  font-size: 24px;
+  color: #ffc107; /* Акцентний козацький жовтий/золотий колір */
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.land-description-section p {
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+/* Логіка прихованого контенту */
+.more-content {
+  display: none; /* Спочатку сховано */
+}
+
+.more-content.expanded {
+  display: block; /* Показуємо при кліку */
+}
+
+/* Стиль посилання-кнопки "читати більше" */
+.read-more-link {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 5px 0;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+.read-more-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* Списки переваг */
+.land-list {
+  list-style: none;
+  padding-left: 20px;
+  margin-bottom: 15px;
+}
+.land-list li {
+  position: relative;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+.land-list li::before {
+  content: "•";
+  color: #ffc107; /* Жовті маркери списку */
+  font-weight: bold;
+  position: absolute;
+  left: -15px;
+}
+
+.cta-lead {
+  font-weight: bold;
+  margin-top: 15px;
+  color: #fff;
+}
+
+.land-footer-text {
+  font-style: italic;
+  margin-top: 20px;
+  color: #ffc107;
+}
+
+/* Контейнер під кнопку донату внизу ленду */
+.land-cta-action {
+  text-align: center;
+  margin: 20px auto 40px auto;
+}
 /* ===== MOBILE ===== */
 @media (max-width: 900px) {
   .wrapper { display: block; }

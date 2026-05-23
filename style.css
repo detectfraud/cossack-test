@@ -59,7 +59,17 @@ body {
   padding: 20px;
   padding-top: 50px;
 }
-
+/* Стан кнопки донату, якщо детектор знайшов AdBlock */
+.donate-smart-btn.blocked-by-adblock {
+  background-color: #555555 !important;
+  color: #cccccc !important;
+  border: 1px dashed #888 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+}
+.donate-smart-btn.blocked-by-adblock:hover {
+  background-color: #666666 !important;
+}
 /* ===== AD SLOTS ===== */
 .ad {
   background: #1e1e1e;

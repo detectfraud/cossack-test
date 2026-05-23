@@ -58,7 +58,7 @@ const I18N = {
 // Глобальні прапорці безпеки
 window._isAdblockDetected = false;
 const keyTimeHash = "u_data_ts";      
-/*const keyStringHash = "u_data_str"; */ 
+const keyStringHash = "u_data_str";  
 
 // Функції інкогніто-маскування LocalStorage
 function maskData(value) {

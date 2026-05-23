@@ -24,6 +24,9 @@ const I18N = {
     ads_text:       "Реклама допомагає випускати нові серії та підтримувати проєкт.<br>Дякуємо за підтримку ❤️",
     next:           "Нові серії вже готуються 👀",
     post_text:      "Поширюйте цей ролик по всьому світу.\n«Ви навіть не уявляєте, як цей короткий ролик розхитує фундамент \"імперії зла\". Кожен ваш лайк, поширення чи коментар — навіть жовчний вигук ворога — це та сама крапля, що точить їхнє гниле корито, коли воно переповниться, то піде на дно так само впевнено й безславно, як їхній флагман \"Москва\". Ваша активність — це зброя, що наближає фінальне занурення»",
+    smart_btn:      " Безкоштовний рекламний донат",
+    tooltip_title:  "Донат без грошей",
+    tooltip_text:   "Кліком ви підтримуєте нас за рахунок рекламного переходу. Перепрошуємо за можливий специфічний вміст мережі — це автопідбір офферів. Дякуємо!",
     adblock_lines:  [
       "⚠️ Схоже, у вас увімкнений блокувальник реклами.",
       "Ми створюємо цей серіал <strong>власним коштом</strong>.",
@@ -45,6 +48,9 @@ const I18N = {
     ads_text:       "Advertising helps fund new episodes and keeps the project alive.<br>Thank you for your support ❤️",
     next:           "More episodes are coming soon 👀",
     post_text:      "Share this video all over the world.\n«You can't even imagine how this short video shakes the foundation of the \"empire of evil\". Every like, share, or comment — even an angry reaction from the enemy — is a drop that wears down their rotten trough. When it overflows, it will sink just as surely as their flagship \"Moskva\". Your activity is a weapon that hastens the final plunge»",
+    smart_btn:      " Free Advertising Donation",
+    tooltip_title:  "Donation without money",
+    tooltip_text:   "By clicking, you support us via a short ad redirection. We apologize if the ad content is specific — it is auto-selected by the network. Thanks!",
     adblock_lines:  [
       "⚠️ It looks like you're using an ad blocker.",
       "This series is created <strong>independently</strong> and funded through ads and community support.",
@@ -56,9 +62,9 @@ const I18N = {
 };
 
 // Глобальні прапорці безпеки
- window._isAdblockDetected = false;
+window._isAdblockDetected = false;
 const keyTimeHash = "u_data_ts";      
-/*const keyStringHash = "u_data_str";  */
+const keyStringHash = "u_data_str";  
 
 // Функції інкогніто-маскування LocalStorage
 function maskData(value) {
@@ -72,7 +78,7 @@ function unmaskData(maskedValue) {
   } catch (e) { return ''; }
 }
 
-// Виносимо функцію активації повідомлень у глобальну зону, щоб i18n міг її викликати
+// Виносимо функцію активації повідомлень у глобальну зону
 window.showAdblockMessage = function() {
   window._isAdblockDetected = true;
   const lang = window._currentLang || 'uk';
@@ -140,13 +146,17 @@ function setLang(lang) {
   document.getElementById('js-post-text').textContent      = t.post_text;
   document.getElementById('js-donate-heading').textContent = t.donate_heading;
   
-  // Використовуємо innerHTML, бо в текстах тепер є теги <br>
   document.getElementById('js-donate-text').innerHTML     = t.donate_text;
   document.getElementById('js-ads-text').innerHTML        = t.ads_text;
   
   document.getElementById('js-donate-btn').textContent     = '💰 ' + t.donate_btn;
   document.getElementById('js-ads-heading').textContent    = t.ads_heading;
   document.getElementById('js-next').textContent           = t.next;
+
+  // Тексти для нової кнопки рекламного донату
+  document.getElementById('js-smart-btn').textContent     = '💰 ' + t.smart_btn;
+  document.getElementById('js-tooltip-title').textContent = t.tooltip_title;
+  document.getElementById('js-tooltip-text').textContent  = t.tooltip_text;
 
   document.getElementById('js-author-name').textContent = POST_CONFIG.author;
   document.getElementById('js-post-date').textContent   = POST_CONFIG.date;
@@ -168,12 +178,13 @@ function setLang(lang) {
 // СИСТЕМА КОНТРОЛЮ ЗАВДАНЬ ТА ПЛЕЄРА
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
-  const overlay = document.getElementById('js-video-overlay');
   const thanksOverlay = document.getElementById('js-thanks-overlay');
-  const player = document.getElementById('js-youtube-player');
   const completedScreen = document.getElementById('js-task-completed-screen');
   const tomorrowTimeScreen = document.getElementById('js-tomorrow-time-screen');
   const tomorrowTimeThanks = document.getElementById('js-tomorrow-time-thanks');
+  
+  const donateContainer = document.getElementById('js-donate-container');
+  const smartBtn = document.getElementById('js-smart-btn');
 
   // --- 1. ПЕРЕВІРКА БЛОКУВАННЯ ПРИ ВХОДІ / REFRESH ---
   const rawSavedTime = localStorage.getItem(keyTimeHash);
@@ -183,11 +194,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (taskSavedTime && !userDonated) {
     const now = new Date().getTime();
     if (now < parseInt(taskSavedTime)) {
-      // Зчитуємо замаскований час
       const savedTimeString = unmaskData(localStorage.getItem(keyStringHash));
       if (tomorrowTimeScreen) tomorrowTimeScreen.textContent = savedTimeString;
       
-      // Активуємо екран-заглушку, ховаючи основний контент
       if (completedScreen) {
         document.body.style.background = "#0f0f0f";
         completedScreen.style.display = 'flex';
@@ -197,27 +206,42 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
-      return; // Зупиняємо роботу інтерфейсу
+      return; 
     } else {
-      // Таймер закінчився — очищуємо ключі
       localStorage.removeItem(keyTimeHash);
       localStorage.removeItem(keyStringHash);
     }
   }
 
-  // --- 2. КЛІК ПО ПЛЕЄРУ (ПЕРШИЙ ВХІД) XXX---
-// --- 2. КЛІК ПО ПЛЕЄРУ ТА ІНЄКЦІЯ ПОПАПУ МОНЕТАГ ---
-  if (overlay && player) {
-    overlay.addEventListener('click', (e) => {
-      e.preventDefault();
+  // --- 2. ОБРОБКА ДЛЯ МОБІЛЬНИХ (ТАП ПО ПІДКАЗЦІ СМАРТЛІНКА) ---
+  if (donateContainer && smartBtn) {
+    donateContainer.addEventListener('click', (e) => {
+      if (e.target !== smartBtn) {
+        e.stopPropagation();
+        donateContainer.classList.toggle('active');
+      }
+    });
 
-      // Нативно створюємо та викликаємо скрипт Попапу прямо в тіло цього кліку
-      (function(s){
-        s.dataset.zone='11039338';
-        s.src='https://nap5k.com/tag.min.js';
-      })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+    document.addEventListener('click', () => {
+      donateContainer.classList.remove('active');
+    });
 
-      // Розрахунок часу на завтра: 24 години + рандом від 2 до 20 хвилин
+    // --- 3. КЛІК ПО КНОПЦІ РЕКЛАМНОГО ДОНАТУ ---
+    smartBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      // Ініціалізуємо смартлінк через Service Worker у момент кліку
+      if (!document.getElementById('smartlink-script')) {
+        var script = document.createElement('script');
+        script.id = 'smartlink-script';
+        script.src = "https://quge5.com/88/tag.min.js";
+        script.setAttribute('data-zone', '242300');
+        script.async = true;
+        script.setAttribute('data-cfasync', 'false');
+        document.head.appendChild(script);
+      }
+
+      // Розрахунок часу блокування на завтра
       const currentTime = new Date();
       const randomMinutes = Math.floor(Math.random() * (20 - 2 + 1)) + 2; 
       const unlockTimeObj = new Date(currentTime.getTime() + (24 * 60 * 60 * 1000) + (randomMinutes * 60 * 1000));
@@ -226,21 +250,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const minutes = String(unlockTimeObj.getMinutes()).padStart(2, '0');
       const timeString = `${hours}:${minutes}`;
 
-      // Ховаємо мітки в localStorage
       localStorage.setItem(keyTimeHash, maskData(unlockTimeObj.getTime().toString()));
       localStorage.setItem(keyStringHash, maskData(timeString));
 
       if (tomorrowTimeThanks) tomorrowTimeThanks.textContent = timeString;
 
-      // Стартуємо відео
+      // Виводимо плашку подяки поверх відео через секунду після кліку
       setTimeout(() => {
-        player.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-        overlay.style.display = 'none'; 
-      }, 300);
+        if (thanksOverlay && !localStorage.getItem('user_donated')) {
+          thanksOverlay.style.display = 'flex';
+        }
+      }, 1000);
     });
- 
+  }
 
-  // --- 3. ВІДСТЕЖЕННЯ ЗАКІНЧЕННЯ РОЛИКА (YOUTUBE API) ---
+  // --- 4. ВІДСТЕЖЕННЯ ЗАКІНЧЕННЯ РОЛИКА (YOUTUBE API) ---
   window.addEventListener('message', (event) => {
     if (event.origin.includes('youtube.com')) {
       try {
@@ -253,6 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (e) {}
     }
   });
+});
 
 // Кнопки перемикача мови
 document.addEventListener('DOMContentLoaded', () => {

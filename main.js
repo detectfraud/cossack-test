@@ -21,6 +21,24 @@ const I18N = {
     next:           "Нові серії вже готуються 👀",
     post_text:      "Поширюйте цей ролик по всьому світу.\n«Ви навіть не уявляєте, як цей короткий ролик розхитує фундамент \"імперії зла\". Кожен ваш лайк, поширення чи коментар — навіть жовчний вигук ворога — це та сама крапля, що точить їхнє гниле корито, коли воно переповниться, то піде на дно так само впевнено й безславно, як їхній флагман \"Москва\". Ваша активність — це зброя, що наближає фінальне занурення»",
     smart_btn:      "Безкоштовний рекламний донат",
+    
+    // Нові тексти для лендингу (UA)
+    land_title:     "«Козацькі Сміхолики»",
+    land_p1:        "Козаки знову оживають — не в підручниках, а у веселих коротких історіях, жартах, пригодах і сучасних мемах.",
+    land_p2:        "«Козацькі Сміхолики» — це серіал коротких роликів, у якому козацький дух поєднується з гумором, народною мудрістю та українським вайбом.",
+    land_p3:        "Кожен ролик — це нова кумедна ситуация, несподіваний поворот або життєва історія, у якій легко впізнати себе, друзів чи сучасну Україну. Тут козаки можуть сперечатись через борщ, шукати скарб, “воювати” з лінощами або потрапляти в абсолютно абсурдні пригоди.",
+    land_cta1:      "Якщо «Козацькі Сміхолики» запали вам у душу — підтримайте створення нових серій. Кожна підтримка допомагає:",
+    land_li1:       "створювати нові ролики;",
+    land_li2:       "покращувати анімацію та озвучку;",
+    land_li3:       "вигадувати ще більше веселих сюжетів;",
+    land_li4:       "розвивати український авторський контент.",
+    land_cta2:      "А ще ви можете стати частиною проєкту:",
+    land_li5:       "запропонувати власну тему чи ідею для нового ролика;",
+    land_li6:       "проголосувати за сюжет, який хочете побачити наступним;",
+    land_li7:       "вплинути на розвиток всесвіту «Козацьких Сміхоликів».",
+    land_footer:    "Разом створимо серіал, який даруватиме людям усмішку та підніме дух 🇺🇦",
+    read_more:      "————————— читати більше",
+
     adblock_lines:  [
       "⚠️ Схоже, у вас увімкнений блокувальник реклами.",
       "Ми створюємо цей серіал <strong>власним коштом</strong>.",
@@ -41,6 +59,24 @@ const I18N = {
     next:           "More episodes are coming soon 👀",
     post_text:      "Share this video all over the world.\n«You can't even imagine how this short video shakes the foundation of the \"empire of evil\". Every like, share, or comment — even an angry reaction from the enemy — is a drop that wears down their rotten trough. When it overflows, it will sink just as surely as their flagship \"Moskva\". Your activity is a weapon that hastens the final plunge»",
     smart_btn:      "Free Advertising Donation",
+    
+    // Нові тексти для лендингу (EN)
+    land_title:     "“Cossack Smiholiky” (The Laughing Cossacks)",
+    land_p1:        "Cossacks come to life once again — not in history textbooks, but in hilarious short stories, jokes, adventures, and modern memes.",
+    land_p2:        "“Cossack Smiholiky” is a short-form video series where the free Cossack spirit perfectly blends with humor, folk wisdom, and authentic Ukrainian vibes.",
+    land_p3:        "Each episode brings a new funny situation, an unexpected twist, or a relatable life story where you can easily recognize yourself, your friends, or modern Ukraine. Here, Cossacks might argue over borscht, hunt for treasures, “wage war” against laziness, or end up in completely absurd situations.",
+    land_cta1:      "If “Cossack Smiholiky” captured your heart, please consider supporting the creation of new episodes. Every bit of support helps us to:",
+    land_li1:       "produce new video episodes;",
+    land_li2:       "improve animation and voice acting quality;",
+    land_li3:       "brainstorm even more hilarious storylines;",
+    land_li4:       "develop authentic Ukrainian independent content.",
+    land_cta2:      "Moreover, you can become an active part of the project:",
+    land_li5:       "suggest your own theme or idea for an upcoming episode;",
+    land_li6:       "vote for the next storyline you want to see animated;",
+    land_li7:       "influence the growth of the “Cossack Smiholiky” universe.",
+    land_footer:    "Together, let's build a series that brings smiles and boosts the spirit 🇺🇦",
+    read_more:      "————————— read more",
+
     adblock_lines:  [
       "⚠️ It looks like you're using an ad blocker.",
       "This series is created <strong>independently</strong> and funded through ads and community support.",

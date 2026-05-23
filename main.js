@@ -3,9 +3,9 @@
    ============================================= */
 
 const POST_CONFIG = {
-  likes:    "101 тис.",
-  comments: "15 тис.",
-  shares:   "2 тис."
+  likes:    "101K",
+  comments: "2K",
+  shares:   "16K"
 };
 
 const I18N = {

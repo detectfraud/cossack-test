@@ -295,6 +295,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// --- ЛОГІКА КНОПКИ "ЧИТАТИ БІЛЬШЕ" ---
+  const readMoreBtn = document.getElementById('js-read-more-btn');
+  const moreContent = document.getElementById('js-more-content');
+
+  if (readMoreBtn && moreContent) {
+    readMoreBtn.addEventListener('click', () => {
+      moreContent.classList.add('expanded'); // Розгортаємо текст
+      readMoreBtn.style.display = 'none'; // Ховаємо саму кнопку "читати більше"
+    });
+  }
 // Кнопки перемикача мови
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-uk').addEventListener('click', () => setLang('uk'));

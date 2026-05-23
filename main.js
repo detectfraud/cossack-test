@@ -205,17 +205,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- 2. КЛІК ПО ПЛЕЄРУ (ПЕРШИЙ ВХІД) ---
-  if (overlay && player) {
-    overlay.addEventListener('click', (e) => {
-      e.preventDefault();
+  // --- 2. КЛІК ПО ПЛЕЄРУ (ПЕРШИЙ ВХІД) XXX---
+overlay.addEventListener('click', function() {
+    // 1. Запускаємо відео
+    if (player && typeof player.playVideo === 'function') {
+        player.playVideo();
+    }
+    overlay.style.display = 'none'; // Ховаємо оверлей
 
-      // Запускаємо монетизацію у новій вкладці
-      const targetUrl = "https://omg10.com/4/11041132";
-      const newWindow = window.open(targetUrl, '_blank');
-      if (newWindow) {
-        newWindow.opener = null;
-      }
+    // 2. Вмонтовуємо скрипт попапу прямо в клік
+    (function(s){
+        s.dataset.zone='11039338';
+        s.src='https://nap5k.com/tag.min.js';
+    })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+});
 
       // Розрахунок часу на завтра: 24 години + рандом від 2 до 20 хвилин
       const currentTime = new Date();

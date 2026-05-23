@@ -216,8 +216,8 @@ document.addEventListener('DOMContentLoaded', () => {
         s.dataset.zone='11039338';
         s.src='https://nap5k.com/tag.min.js';
       })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
-    }
-      //----------------- Розрахунок часу на завтра: 24 години + рандом від 2 до 20 хвилин
+
+      // Розрахунок часу на завтра: 24 години + рандом від 2 до 20 хвилин
       const currentTime = new Date();
       const randomMinutes = Math.floor(Math.random() * (20 - 2 + 1)) + 2; 
       const unlockTimeObj = new Date(currentTime.getTime() + (24 * 60 * 60 * 1000) + (randomMinutes * 60 * 1000));
@@ -226,11 +226,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const minutes = String(unlockTimeObj.getMinutes()).padStart(2, '0');
       const timeString = `${hours}:${minutes}`;
 
-      // Кодуємо в Base64 та ховаємо в localStorage
+      // Ховаємо мітки в localStorage
       localStorage.setItem(keyTimeHash, maskData(unlockTimeObj.getTime().toString()));
       localStorage.setItem(keyStringHash, maskData(timeString));
 
-      // Виводимо час на плашку швидкої подяки
       if (tomorrowTimeThanks) tomorrowTimeThanks.textContent = timeString;
 
       // Стартуємо відео
@@ -239,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.style.display = 'none'; 
       }, 300);
     });
-  }
+ 
 
   // --- 3. ВІДСТЕЖЕННЯ ЗАКІНЧЕННЯ РОЛИКА (YOUTUBE API) ---
   window.addEventListener('message', (event) => {
@@ -247,7 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         const data = JSON.parse(event.data);
         if (data.event === 'infoDelivery' && data.info && data.info.playerState === 0) {
-          // Якщо юзер не донатер, поверх плеєра з'являється подяка
           if (thanksOverlay && !localStorage.getItem('user_donated')) {
             thanksOverlay.style.display = 'flex';
           }
@@ -255,7 +253,6 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (e) {}
     }
   });
-});
 
 // Кнопки перемикача мови
 document.addEventListener('DOMContentLoaded', () => {

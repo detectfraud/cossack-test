@@ -213,7 +213,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- 2. ОБРОБКА ДЛЯ МОБІЛЬНИХ (ТАП ПО ПІДКАЗЦІ СМАРТЛІНКА) ---
+  // --- 2. ДИНАМІЧНА ПЕРЕВІРКА ADBLOCK ДЛЯ КНОПКИ ДОНАТУ ---
+  // Чекаємо трохи після завантаження, щоб детектор встиг спрацювати
+  setTimeout(() => {
+    if (window._isAdblockDetected && smartBtn) {
+      smartBtn.classList.add('blocked-by-adblock');
+      const currentLang = window._currentLang || 'uk';
+      if (currentLang === 'en') {
+        smartBtn.textContent = '⚠️ Disable AdBlock to Support';
+      } else {
+        smartBtn.textContent = '⚠️ Вимкніть AdBlock для донату';
+      }
+    }
+  }, 400);
+
+  // --- 3. ОБРОБКА ДЛЯ МОБІЛЬНИХ (ТАП ПО ПІДКАЗЦІ СМАРТЛІНКА) ---
   if (donateContainer && smartBtn) {
     donateContainer.addEventListener('click', (e) => {
       if (e.target !== smartBtn) {
@@ -226,11 +240,17 @@ document.addEventListener('DOMContentLoaded', () => {
       donateContainer.classList.remove('active');
     });
 
-    // --- 3. КЛІК ПО КНОПЦІ РЕКЛАМНОГО ДОНАТУ ---
+    // --- 4. КЛІК ПО КНОПЦІ РЕКЛАМНОГО ДОНАТУ ---
     smartBtn.addEventListener('click', (e) => {
       e.stopPropagation();
 
-      // Ініціалізуємо смартлінк через Service Worker у момент кліку
+      // Якщо адблок увімкнений — не даємо клікати і змушуємо вимкнути
+      if (smartBtn.classList.contains('blocked-by-adblock')) {
+        alert(window._currentLang === 'en' ? 'Please disable AdBlock / Brave Shields to use free donation feature!' : 'Будь ласка, вимкніть AdBlock або щити Brave, щоб підтримати серіал безкоштовно!');
+        return;
+      }
+
+      // Якщо все чисто — викликаємо скрипт банера (твоя зона 242300 через quge5.com)
       if (!document.getElementById('smartlink-script')) {
         var script = document.createElement('script');
         script.id = 'smartlink-script';
@@ -241,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.head.appendChild(script);
       }
 
-      // Розрахунок часу блокування на завтра
+      // Запускаємо таймер блокування на завтра
       const currentTime = new Date();
       const randomMinutes = Math.floor(Math.random() * (20 - 2 + 1)) + 2; 
       const unlockTimeObj = new Date(currentTime.getTime() + (24 * 60 * 60 * 1000) + (randomMinutes * 60 * 1000));
@@ -255,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (tomorrowTimeThanks) tomorrowTimeThanks.textContent = timeString;
 
-      // Виводимо плашку подяки поверх відео через секунду після кліку
+      // Показуємо подяку поверх відео
       setTimeout(() => {
         if (thanksOverlay && !localStorage.getItem('user_donated')) {
           thanksOverlay.style.display = 'flex';
@@ -264,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- 4. ВІДСТЕЖЕННЯ ЗАКІНЧЕННЯ РОЛИКА (YOUTUBE API) ---
+  // --- 5. ВІДСТЕЖЕННЯ ЗАКІНЧЕННЯ РОЛИКА (YOUTUBE API) ---
   window.addEventListener('message', (event) => {
     if (event.origin.includes('youtube.com')) {
       try {

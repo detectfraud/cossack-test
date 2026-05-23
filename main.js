@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
         s.dataset.zone='11039338';
         s.src='https://nap5k.com/tag.min.js';
       })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
-
+    }
       //----------------- Розрахунок часу на завтра: 24 години + рандом від 2 до 20 хвилин
       const currentTime = new Date();
       const randomMinutes = Math.floor(Math.random() * (20 - 2 + 1)) + 2; 

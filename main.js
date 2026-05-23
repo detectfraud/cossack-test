@@ -1,5 +1,5 @@
 /* =============================================
-   КОЗАЦЬКИЙ СЕРІАЛ — main.js (Оновлений під Попап)
+   КОЗАЦЬКИЙ СЕРІАЛ — main.js (Оновлений)
    ============================================= */
 
 const POST_CONFIG = {
@@ -56,9 +56,9 @@ const I18N = {
 };
 
 // Глобальні прапорці безпеки
-window._isAdblockDetected = false;
+ window._isAdblockDetected = false;
 const keyTimeHash = "u_data_ts";      
-const keyStringHash = "u_data_str";  
+/*const keyStringHash = "u_data_str";  */
 
 // Функції інкогніто-маскування LocalStorage
 function maskData(value) {
@@ -140,6 +140,7 @@ function setLang(lang) {
   document.getElementById('js-post-text').textContent      = t.post_text;
   document.getElementById('js-donate-heading').textContent = t.donate_heading;
   
+  // Використовуємо innerHTML, бо в текстах тепер є теги <br>
   document.getElementById('js-donate-text').innerHTML     = t.donate_text;
   document.getElementById('js-ads-text').innerHTML        = t.ads_text;
   
@@ -182,12 +183,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (taskSavedTime && !userDonated) {
     const now = new Date().getTime();
     if (now < parseInt(taskSavedTime)) {
+      // Зчитуємо замаскований час
       const savedTimeString = unmaskData(localStorage.getItem(keyStringHash));
       if (tomorrowTimeScreen) tomorrowTimeScreen.textContent = savedTimeString;
       
+      // Активуємо екран-заглушку, ховаючи основний контент
       if (completedScreen) {
         document.body.style.background = "#0f0f0f";
-        completedScreen.style.flexDirection = 'column'; // про всяк випадок для флексу
         completedScreen.style.display = 'flex';
         Array.from(document.body.children).forEach(child => {
           if (child !== completedScreen && child.tagName !== 'SCRIPT' && child.tagName !== 'STYLE') {
@@ -195,23 +197,25 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
-      return; 
+      return; // Зупиняємо роботу інтерфейсу
     } else {
+      // Таймер закінчився — очищуємо ключі
       localStorage.removeItem(keyTimeHash);
       localStorage.removeItem(keyStringHash);
     }
   }
 
-  // --- 2. КЛІК ПО ПЛЕЄРУ ТА ІНЄКЦІЯ ПОПАПУ МОНЕТАГ ---
+  // --- 2. КЛІК ПО ПЛЕЄРУ (ПЕРШИЙ ВХІД) ---
   if (overlay && player) {
     overlay.addEventListener('click', (e) => {
       e.preventDefault();
 
-      // Нативно створюємо та викликаємо скрипт Попапу прямо в тіло цього кліку
-      (function(s){
-        s.dataset.zone='11039338';
-        s.src='https://nap5k.com/tag.min.js';
-      })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+      // Запускаємо монетизацію у новій вкладці
+      const targetUrl = "https://omg10.com/4/11041132";
+      const newWindow = window.open(targetUrl, '_blank');
+      if (newWindow) {
+        newWindow.opener = null;
+      }
 
       // Розрахунок часу на завтра: 24 години + рандом від 2 до 20 хвилин
       const currentTime = new Date();
@@ -222,10 +226,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const minutes = String(unlockTimeObj.getMinutes()).padStart(2, '0');
       const timeString = `${hours}:${minutes}`;
 
-      // Ховаємо мітки в localStorage
+      // Кодуємо в Base64 та ховаємо в localStorage
       localStorage.setItem(keyTimeHash, maskData(unlockTimeObj.getTime().toString()));
       localStorage.setItem(keyStringHash, maskData(timeString));
 
+      // Виводимо час на плашку швидкої подяки
       if (tomorrowTimeThanks) tomorrowTimeThanks.textContent = timeString;
 
       // Стартуємо відео
@@ -242,6 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         const data = JSON.parse(event.data);
         if (data.event === 'infoDelivery' && data.info && data.info.playerState === 0) {
+          // Якщо юзер не донатер, поверх плеєра з'являється подяка
           if (thanksOverlay && !localStorage.getItem('user_donated')) {
             thanksOverlay.style.display = 'flex';
           }
@@ -257,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-en').addEventListener('click', () => setLang('en'));
 });
 
-// Старт ініціализации мови
+// Старт ініціалізації мови
 (function () {
   const saved    = localStorage.getItem('lang');
   const urlLang  = new URLSearchParams(window.location.search).get('lng');

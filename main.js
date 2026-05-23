@@ -1,5 +1,5 @@
 /* =============================================
-   КОЗАЦЬКИЙ СЕРІАЛ — main.js (Оновлений)
+   КОЗАЦЬКИЙ СЕРІАЛ — main.js (Повний та Оновлений)
    ============================================= */
 
 const POST_CONFIG = {
@@ -16,17 +16,17 @@ const I18N = {
     sub:            "Відео, яке зібрало мільйони переглядів в Facebook, стало початком серії мемів про козаків.",
     before_video:   "Перша серія, з якої все почалося 👇",
     donate_heading: "❤️ Підтримати серіал",
-    donate_text:    "Ми створюємо цей серіал власним коштом.<br>AI-сервіси, генерація сцен, монтаж та створення нових серій потребують ресурсів.<br>Якщо тобі подобається цей проєкт — підтримай його розвиток ❤️",
+    donate_text:    "Ми створюємо цей серіал власним коштом.<br>AI-сервіси, generation сцен, монтаж та створення нових серій потребують ресурсів.<br>Якщо тобі подобається цей проєкт — підтримай його розвиток ❤️",
     donate_btn:     "Грошовий донат",
     next:           "Нові серії вже готуються 👀",
     post_text:      "Поширюйте цей ролик по всьому світу.\n«Ви навіть не уявляєте, як цей короткий ролик розхитує фундамент \"імперії зла\". Кожен ваш лайк, поширення чи коментар — навіть жовчний вигук ворога — це та сама крапля, що точить їхнє гниле корито, коли воно переповниться, то піде на дно так само впевнено й безславно, як їхній флагман \"Москва\". Ваша активність — це зброя, що наближає фінальне занурення»",
     smart_btn:      "Безкоштовний рекламний донат",
     
-    // Нові тексти для лендингу (UA)
+    // Тексти лендингу (UA)
     land_title:     "«Козацькі Сміхолики»",
     land_p1:        "Козаки знову оживають — не в підручниках, а у веселих коротких історіях, жартах, пригодах і сучасних мемах.",
     land_p2:        "«Козацькі Сміхолики» — це серіал коротких роликів, у якому козацький дух поєднується з гумором, народною мудрістю та українським вайбом.",
-    land_p3:        "Кожен ролик — це нова кумедна ситуация, несподіваний поворот або життєва історія, у якій легко впізнати себе, друзів чи сучасну Україну. Тут козаки можуть сперечатись через борщ, шукати скарб, “воювати” з лінощами або потрапляти в абсолютно абсурдні пригоди.",
+    land_p3:        "Кожен ролик — це нова кумедна ситуація, несподіваний поворот або життєва історія, у якій легко впізнати себе, друзів чи сучасну Україну. Тут козаки можуть сперечатись через борщ, шукати скарб, “воювати” з лінощами або потрапляти в абсолютно абсурдні пригоди.",
     land_cta1:      "Якщо «Козацькі Сміхолики» запали вам у душу — підтримайте створення нових серій. Кожна підтримка допомагає:",
     land_li1:       "створювати нові ролики;",
     land_li2:       "покращувати анімацію та озвучку;",
@@ -60,7 +60,7 @@ const I18N = {
     post_text:      "Share this video all over the world.\n«You can't even imagine how this short video shakes the foundation of the \"empire of evil\". Every like, share, or comment — even an angry reaction from the enemy — is a drop that wears down their rotten trough. When it overflows, it will sink just as surely as their flagship \"Moskva\". Your activity is a weapon that hastens the final plunge»",
     smart_btn:      "Free Advertising Donation",
     
-    // Нові тексти для лендингу (EN)
+    // Тексти лендингу (EN)
     land_title:     "“Cossack Smiholiky” (The Laughing Cossacks)",
     land_p1:        "Cossacks come to life once again — not in history textbooks, but in hilarious short stories, jokes, adventures, and modern memes.",
     land_p2:        "“Cossack Smiholiky” is a short-form video series where the free Cossack spirit perfectly blends with humor, folk wisdom, and authentic Ukrainian vibes.",
@@ -104,7 +104,7 @@ function unmaskData(maskedValue) {
   } catch (e) { return ''; }
 }
 
-// Активація повідомлень у глобальній зоні
+// Активація повідомлень у сайдбарах
 window.showAdblockMessage = function() {
   window._isAdblockDetected = true;
   const lang = window._currentLang || 'uk';
@@ -174,7 +174,29 @@ function setLang(lang) {
   if(document.getElementById('js-donate-text')) document.getElementById('js-donate-text').innerHTML = t.donate_text;
   if(document.getElementById('js-next')) document.getElementById('js-next').textContent = t.next;
 
-  // Тексти для нової кнопки рекламного донату
+  // Тексти лендингу (Оновлення при зміні мови)
+  if(document.getElementById('js-land-title')) document.getElementById('js-land-title').textContent = t.land_title;
+  if(document.getElementById('js-land-p1')) document.getElementById('js-land-p1').textContent = t.land_p1;
+  if(document.getElementById('js-land-p2')) document.getElementById('js-land-p2').textContent = t.land_p2;
+  if(document.getElementById('js-land-p3')) document.getElementById('js-land-p3').textContent = t.land_p3;
+  if(document.getElementById('js-land-cta1')) document.getElementById('js-land-cta1').textContent = t.land_cta1;
+  if(document.getElementById('js-land-cta2')) document.getElementById('js-land-cta2').textContent = t.land_cta2;
+  if(document.getElementById('js-land-footer')) document.getElementById('js-land-footer').textContent = t.land_footer;
+  if(document.getElementById('js-read-more-btn')) document.getElementById('js-read-more-btn').textContent = t.read_more;
+
+  // Динамічний переклад списків у лендингу
+  const listItems = document.querySelectorAll('.land-list li');
+  if(listItems.length >= 7) {
+    listItems[0].textContent = t.land_li1;
+    listItems[1].textContent = t.land_li2;
+    listItems[2].textContent = t.land_li3;
+    listItems[3].textContent = t.land_li4;
+    listItems[4].textContent = t.land_li5;
+    listItems[5].textContent = t.land_li6;
+    listItems[6].textContent = t.land_li7;
+  }
+
+  // Тексти кнопок донату
   if(document.getElementById('js-smart-btn') && !window._isAdblockDetected) {
     document.getElementById('js-smart-btn').textContent = '💰 ' + t.smart_btn;
   }
@@ -248,27 +270,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 400);
 
-  // --- 3. ЧИСТИЙ І ПРЯМИЙ КЛІК ПО КНОПЦІ РЕКЛАМНОГО ДОНАТУ ---
+  // --- 3. ЧИСТИЙ І ПРЯМИЙ КЛІК ПО КНОПЦІ РЕКЛАМНОГО ДОНАТУ (DIRECT LINK) ---
   if (smartBtn) {
     smartBtn.addEventListener('click', (e) => {
       e.stopPropagation();
 
-      // Якщо адблок увімкнений — не даємо клікати
       if (smartBtn.classList.contains('blocked-by-adblock')) {
         alert(window._currentLang === 'en' ? 'Please disable AdBlock / Brave Shields to support us!' : 'Будь ласка, вимкніть AdBlock або щити Brave, щоб підтримати серіал!');
         return;
       }
 
-      // ТВОЄ ПРЯМЕ ПОСИЛАННЯ (Direct Link від Monetag)
       const directLinkUrl = "https://omg10.com/4/11041132"; 
       
-      // Миттєве відкриття у новій вкладці
       const newWindow = window.open(directLinkUrl, '_blank');
       if (newWindow) {
         newWindow.opener = null; 
       }
 
-      // Запускаємо таймер блокування на завтра
       const currentTime = new Date();
       const randomMinutes = Math.floor(Math.random() * (20 - 2 + 1)) + 2; 
       const unlockTimeObj = new Date(currentTime.getTime() + (24 * 60 * 60 * 1000) + (randomMinutes * 60 * 1000));
@@ -282,7 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (tomorrowTimeThanks) tomorrowTimeThanks.textContent = timeString;
 
-      // Показуємо подяку поверх відео через 1 секунду
       setTimeout(() => {
         if (thanksOverlay && !localStorage.getItem('user_donated')) {
           thanksOverlay.style.display = 'flex';

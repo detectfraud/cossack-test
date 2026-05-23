@@ -146,12 +146,99 @@ h1 { text-align: center; color: gold; }
   border: none; 
 }
 
-/* ===== DONATE BUTTON ===== */
-.btn {
-  display: block; text-align: center;
-  padding: 14px; background: gold;
-  color: black; font-weight: bold;
-  border-radius: 10px; text-decoration: none;
+/* ===== NEW SMARTLINK DONATE STRUCTURE ===== */
+.donate-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.donate-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+}
+
+/* Нова кнопка смартлінка */
+.donate-smart-btn {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0 4px 6px rgba(40, 167, 69, 0.15);
+  flex-grow: 1;
+  text-align: center;
+}
+.donate-smart-btn:hover { background-color: #218838; }
+.donate-smart-btn:active { transform: scale(0.99); }
+
+/* Оригінальна кнопка Donatello */
+.btn-donatello {
+  display: block; 
+  text-align: center;
+  padding: 14px; 
+  background: gold;
+  color: black; 
+  font-weight: bold;
+  border-radius: 10px; 
+  text-decoration: none;
+  transition: transform 0.1s;
+}
+.btn-donatello:active { transform: scale(0.99); }
+
+/* Віконце з динамічним поясненням */
+.donate-tooltip {
+  position: relative;
+  background-color: #242526;
+  border: 1px solid #3a3b3c;
+  border-radius: 8px;
+  padding: 8px 12px;
+  width: 145px;
+  height: 22px;
+  overflow: hidden;
+  transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), height 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.tooltip-title {
+  font-size: 13px;
+  font-weight: bold;
+  color: gold;
+  white-space: nowrap;
+  margin-bottom: 6px;
+}
+
+.tooltip-text {
+  font-size: 11px;
+  color: #b0b3b8;
+  line-height: 1.4;
+  opacity: 0;
+  transition: opacity 0.2s;
+  width: 250px;
+}
+
+/* Стан при наведенні миші (десктоп) або активному класі (мобільні) */
+.donate-container.active .donate-tooltip,
+.donate-container:hover .donate-tooltip {
+  width: 275px;
+  height: 125px;
+  background-color: #2f3031;
+  border-color: #4e4f50;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+}
+
+.donate-container.active .tooltip-text,
+.donate-container:hover .tooltip-text {
+  opacity: 1;
+  transition-delay: 0.1s;
 }
 
 /* ===== NEXT CTA ===== */
@@ -175,4 +262,14 @@ h1 { text-align: center; color: gold; }
   .sidebar { display: none; }
   .content { margin: 0; max-width: 100%; }
   .sticky  { display: none !important; }
+  
+  .donate-container {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+  .donate-smart-btn { width: 100%; }
+  .donate-tooltip { width: auto; height: 22px; transition: height 0.3s; }
+  .donate-container.active .donate-tooltip { width: auto; height: 115px; }
+  .tooltip-text { width: 100%; }
 }

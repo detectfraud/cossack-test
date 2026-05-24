@@ -343,7 +343,12 @@ h1 { text-align: center; color: gold; }
   margin-top: 20px;
   color: #ffc107;
 }
-
+#right-shield {
+  position: fixed;
+  background: transparent; /* Повністю невидимий щит */
+  z-index: 999999;          /* Поверх усієї реклами */
+  display: none;            /* Вмикається тільки коли діє пауза (.shield-active) */
+}
 /* Контейнер під кнопку донату внизу ленду */
 .land-cta-action {
   text-align: center;
@@ -365,4 +370,25 @@ h1 { text-align: center; color: gold; }
   .donate-tooltip { width: auto; height: 22px; transition: height 0.3s; }
   .donate-container.active .donate-tooltip { width: auto; height: 115px; }
   .tooltip-text { width: 100%; }
+}
+/* 1. ДЛЯ КОМП'ЮТЕРІВ (ПК) — Накриваємо праву частину */
+@media (min-width: 769px) {
+  body.shield-active #right-shield {
+    display: block;
+    top: 0;
+    right: 0;
+    width: 35vw;   /* Закриваємо 35% екрану справа */
+    height: 100vh; /* На всю висоту екрану */
+  }
+}
+
+/* 2. ДЛЯ МОБІЛЬНИХ — Накриваємо верхню частину, де воно залипло */
+@media (max-width: 768px) {
+  body.shield-active #right-shield {
+    display: block;
+    top: 0;        /* Притискаємо до самого верху */
+    left: 0;
+    width: 100vw;  /* На всю ширину телефона */
+    height: 15vh;  /* Закриваємо верхні 15% екрану (якраз під мобільний банер) */
+  }
 }

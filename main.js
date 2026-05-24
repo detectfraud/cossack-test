@@ -159,6 +159,24 @@ window.showAdblockMessage = function() {
   if (document.readyState === 'complete') { checkAdblock(); } else { window.addEventListener('load', checkAdblock); }
 })();
 
+// АВТОНОМНЕ ІНІЦІАЛІЗУВАННЯ СКРИПТА РЕКЛАМИ
+function injectMonetagScript() {
+  const rawSavedTime = localStorage.getItem(keyTimeHash);
+  const taskSavedTime = unmaskData(rawSavedTime);
+  const now = new Date().getTime();
+
+  // Додаємо тег ОФІЦІЙНОГО скрипта СТРОГО якщо немає активного блокування
+  if (!document.getElementById('monetag-tag') && (!taskSavedTime || now >= parseInt(taskSavedTime))) {
+    const script = document.createElement('script');
+    script.id = 'monetag-tag';
+    script.src = "https://quge5.com/88/tag.min.js";
+    script.setAttribute('data-zone', '242300');
+    script.async = true;
+    script.setAttribute('data-cfasync', 'false');
+    document.head.appendChild(script);
+  }
+}
+
 // i18n РЕНДЕР
 function setLang(lang) {
   const t = I18N[lang];
@@ -213,7 +231,7 @@ function setLang(lang) {
     const now = new Date().getTime();
 
     if (taskSavedTime && now < parseInt(taskSavedTime)) {
-      // Кнопка заблокована — переконуємося, що скрипт видалено (режим тиші)
+      // Кнопка заблокована — повністю видаляємо скрипт (режим тиші)
       const monetagScript = document.getElementById('monetag-tag');
       if (monetagScript) {
         monetagScript.remove();
@@ -225,12 +243,13 @@ function setLang(lang) {
       smartBtn.style.cursor = 'not-allowed';
       smartBtn.textContent = t.smart_btn_locked + savedTimeString;
     } else {
-      // Кнопка активна
+      // Кнопка активна — переконуємося, що скрипт підключено
       smartBtn.disabled = false;
       smartBtn.style.opacity = '1';
       smartBtn.style.cursor = 'pointer';
       if (!window._isAdblockDetected) {
         smartBtn.textContent = '💰 ' + t.smart_btn;
+        injectMonetagScript();
       } else {
         smartBtn.classList.add('blocked-by-adblock');
         smartBtn.textContent = lang === 'en' ? '⚠️ Disable AdBlock to Support' : '⚠️ Вимкніть AdBlock для донату';
@@ -273,9 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // === БЕЗПЕЧНА ДЕАКТИВАЦІЯ ТА КОНТРОЛЬ ФОКУСУ ===
 
-  // Функція, яка вмикає режим тиші, видаляє оригінальний тег реклами та блокує кнопку
   function executeSmartlinkAction() {
-    // 1. Розрахунок часу блокування кнопки (+24 години та випадкові хвилини)
     const currentTime = new Date();
     const randomMinutes = Math.floor(Math.random() * (20 - 2 + 1)) + 2; 
     const unlockTimeObj = new Date(currentTime.getTime() + (24 * 60 * 60 * 1000) + (randomMinutes * 60 * 1000));
@@ -284,21 +301,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const minutes = String(unlockTimeObj.getMinutes()).padStart(2, '0');
     const timeString = `${hours}:${minutes}`;
 
-    // 2. Записуємо лок у пам'ять
     localStorage.setItem(keyTimeHash, maskData(unlockTimeObj.getTime().toString()));
     localStorage.setItem(keyStringHash, maskData(timeString));
 
-    // 3. ПОВНІСТЮ ВИДАЛЯЄМО ОРИГІНАЛЬНИЙ СКРИПТ MONETAG З HEAD (ВМИКАЄМО РЕЖИМ ТИШІ)
+    // МИТТЄВО ВИДАЛЯЄМО СКРИПТ (ВМИКАЄМО РЕЖИМ ТИШІ)
     const monetagScript = document.getElementById('monetag-tag');
     if (monetagScript) {
       monetagScript.remove();
     }
 
-    // 4. Оновлюємо стан кнопки через систему локалізації
     setLang(window._currentLang || 'uk');
   }
 
-  // Обробник кліку на головну смарт-кнопку
   if (smartBtn) {
     smartBtn.addEventListener('click', (e) => {
       if (smartBtn.disabled || smartBtn.classList.contains('blocked-by-adblock')) {
@@ -310,22 +324,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const hideOffer = localStorage.getItem('hide_instruction_offer') === 'true';
       if (hideOffer) {
         
-        // Одноразовий слухач: запуск блокування тільки якщо юзер реально перейшов у нову вкладку
+        // Одноразовий лісенер: блокування ТІЛЬКИ якщо юзер реально перейшов у нове вікно реклами
         window.addEventListener('blur', function blurHandler() {
           setTimeout(() => {
             executeSmartlinkAction();
-          }, 2000); // 2 секунди затримки, поки відкривається проміжна сторінка
+          }, 2000);
           window.removeEventListener('blur', blurHandler);
         }, { once: true });
 
       } else {
-        e.preventDefault(); // Зупиняємо перехід, поки не відповість у модальному вікні
+        e.preventDefault();
         if(offerModal) offerModal.style.display = 'block';
       }
     });
   }
 
-  // Кнопки модального вікна інструкції
   if(document.getElementById('js-offer-yes')) {
     document.getElementById('js-offer-yes').addEventListener('click', () => {
       if (neverShowCb && neverShowCb.checked) localStorage.setItem('hide_instruction_offer', 'true');
@@ -345,7 +358,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (neverShowCb && neverShowCb.checked) localStorage.setItem('hide_instruction_offer', 'true');
       if(offerModal) offerModal.style.display = 'none';
       
-      // Слідуємо логіці втрати фокусу: деактивація тільки якщо відбувся реальний перехід
       window.addEventListener('blur', function blurHandler() {
         setTimeout(() => {
           executeSmartlinkAction();
@@ -353,7 +365,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.removeEventListener('blur', blurHandler);
       }, { once: true });
 
-      // Емулюємо повторний чистий клік, щоб Monetag відкрив рекламу
       smartBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     });
   }
@@ -380,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
     adminClearBtn.addEventListener('click', () => {
       localStorage.removeItem(keyTimeHash);
       localStorage.removeItem(keyStringHash);
-      alert('🔒 Блокування скинуто! Кнопка активна, скрипт повернеться після оновлення.');
+      alert('🔒 Блокування скинуто! Кнопка активна.');
       location.reload();
     });
   }

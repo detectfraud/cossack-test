@@ -26,7 +26,7 @@ const I18N = {
     land_title:     "«Козацькі Сміхолики»",
     land_p1:        "Козаки знову оживають — не в підручниках, а у веселих коротких історіях, жартах, пригодах і сучасних мемах.",
     land_p2:        "«Козацькі Сміхолики» — це серіал коротких роликів, у якому козацький дух поєднується з гумором, народною мудрістю та українським вайбом.",
-    land_p3:        "Кожен ролик — це нова кумедна ситуация, несподіваний поворот або життєва історія, у якій легко впізнати себе, друзів чи сучасну Україну. Тут козаки можуть сперечатись через борщ, шукати скарб, “воювати” з лінощами або потрапляти в абсолютно абсурдні пригоди.",
+    land_p3:        "Кожен ролик — це нова кумедна ситуація, несподіваний поворот або життєва історія, у якій легко впізнати себе, друзів чи сучасну Україну. Тут козаки можуть сперечатись через борщ, шукати скарб, “воювати” з лінощами або потрапляти в абсолютно абсурдні пригоди.",
     land_cta1:      "Якщо «Козацькі Сміхолики» запали вам у душу — підтримайте створення нових серій. Кожна підтримка допомагає:",
     land_li1:       "створювати нові ролики;",
     land_li2:       "покращувати анімацію та озвучку;",
@@ -213,12 +213,19 @@ function setLang(lang) {
     const now = new Date().getTime();
 
     if (taskSavedTime && now < parseInt(taskSavedTime)) {
+      // Кнопка заблокована — переконуємося, що скрипт видалено (режим тиші)
+      const monetagScript = document.getElementById('monetag-tag');
+      if (monetagScript) {
+        monetagScript.remove();
+      }
+
       const savedTimeString = unmaskData(localStorage.getItem(keyStringHash));
       smartBtn.disabled = true;
       smartBtn.style.opacity = '0.5';
       smartBtn.style.cursor = 'not-allowed';
       smartBtn.textContent = t.smart_btn_locked + savedTimeString;
     } else {
+      // Кнопка активна
       smartBtn.disabled = false;
       smartBtn.style.opacity = '1';
       smartBtn.style.cursor = 'pointer';
@@ -264,20 +271,11 @@ document.addEventListener('DOMContentLoaded', () => {
     setLang(window._currentLang || 'uk');
   }, 100);
 
-  // --- ЧИСТИЙ ТА БЕЗПЕЧНИЙ ЗАПУСК ОФІЦІЙНОГО ТЕГУ MONETAG ---
-  function executeSmartlinkAction() {
-    // Вмикаємо оригінальний скрипт-тег від Monetag строго у момент кліку
-    if (!document.getElementById('monetag-smartlink-script')) {
-      var script = document.createElement('script');
-      script.id = 'monetag-smartlink-script';
-      script.src = "https://quge5.com/88/tag.min.js";
-      script.setAttribute('data-zone', '242300');
-      script.async = true;
-      script.setAttribute('data-cfasync', 'false');
-      document.head.appendChild(script);
-    }
+  // === БЕЗПЕЧНА ДЕАКТИВАЦІЯ ТА КОНТРОЛЬ ФОКУСУ ===
 
-    // Розрахунок часу блокування кнопки (+24 години та випадкові хвилини)
+  // Функція, яка вмикає режим тиші, видаляє оригінальний тег реклами та блокує кнопку
+  function executeSmartlinkAction() {
+    // 1. Розрахунок часу блокування кнопки (+24 години та випадкові хвилини)
     const currentTime = new Date();
     const randomMinutes = Math.floor(Math.random() * (20 - 2 + 1)) + 2; 
     const unlockTimeObj = new Date(currentTime.getTime() + (24 * 60 * 60 * 1000) + (randomMinutes * 60 * 1000));
@@ -286,32 +284,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const minutes = String(unlockTimeObj.getMinutes()).padStart(2, '0');
     const timeString = `${hours}:${minutes}`;
 
-    // Записуємо лок у пам'ять
+    // 2. Записуємо лок у пам'ять
     localStorage.setItem(keyTimeHash, maskData(unlockTimeObj.getTime().toString()));
     localStorage.setItem(keyStringHash, maskData(timeString));
 
-    // Миттєво блокуємо кнопку на сторінці (попап більше не вистрілить)
+    // 3. ПОВНІСТЮ ВИДАЛЯЄМО ОРИГІНАЛЬНИЙ СКРИПТ MONETAG З HEAD (ВМИКАЄМО РЕЖИМ ТИШІ)
+    const monetagScript = document.getElementById('monetag-tag');
+    if (monetagScript) {
+      monetagScript.remove();
+    }
+
+    // 4. Оновлюємо стан кнопки через систему локалізації
     setLang(window._currentLang || 'uk');
   }
 
+  // Обробник кліку на головну смарт-кнопку
   if (smartBtn) {
     smartBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
       if (smartBtn.disabled || smartBtn.classList.contains('blocked-by-adblock')) {
+        e.preventDefault();
         alert(window._currentLang === 'en' ? 'Please disable AdBlock to continue!' : 'Будь ласка, вимкніть AdBlock, щоб продовжити!');
         return;
       }
 
       const hideOffer = localStorage.getItem('hide_instruction_offer') === 'true';
       if (hideOffer) {
-        executeSmartlinkAction();
+        
+        // Одноразовий слухач: запуск блокування тільки якщо юзер реально перейшов у нову вкладку
+        window.addEventListener('blur', function blurHandler() {
+          setTimeout(() => {
+            executeSmartlinkAction();
+          }, 2000); // 2 секунди затримки, поки відкривається проміжна сторінка
+          window.removeEventListener('blur', blurHandler);
+        }, { once: true });
+
       } else {
+        e.preventDefault(); // Зупиняємо перехід, поки не відповість у модальному вікні
         if(offerModal) offerModal.style.display = 'block';
       }
     });
   }
 
-  // Кнопки модалки-запиту
+  // Кнопки модального вікна інструкції
   if(document.getElementById('js-offer-yes')) {
     document.getElementById('js-offer-yes').addEventListener('click', () => {
       if (neverShowCb && neverShowCb.checked) localStorage.setItem('hide_instruction_offer', 'true');
@@ -330,7 +344,17 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('js-offer-no').addEventListener('click', () => {
       if (neverShowCb && neverShowCb.checked) localStorage.setItem('hide_instruction_offer', 'true');
       if(offerModal) offerModal.style.display = 'none';
-      executeSmartlinkAction();
+      
+      // Слідуємо логіці втрати фокусу: деактивація тільки якщо відбувся реальний перехід
+      window.addEventListener('blur', function blurHandler() {
+        setTimeout(() => {
+          executeSmartlinkAction();
+        }, 2000);
+        window.removeEventListener('blur', blurHandler);
+      }, { once: true });
+
+      // Емулюємо повторний чистий клік, щоб Monetag відкрив рекламу
+      smartBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     });
   }
 
@@ -356,12 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
     adminClearBtn.addEventListener('click', () => {
       localStorage.removeItem(keyTimeHash);
       localStorage.removeItem(keyStringHash);
-      
-      // Видаляємо тег скрипта з head, якщо він там був, щоб можна було викликати знову
-      const scriptTag = document.getElementById('monetag-smartlink-script');
-      if(scriptTag) scriptTag.remove();
-
-      alert('🔒 Блокування скинуто! Кнопка знову активна.');
+      alert('🔒 Блокування скинуто! Кнопка активна, скрипт повернеться після оновлення.');
       location.reload();
     });
   }

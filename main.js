@@ -1,5 +1,5 @@
 /* =============================================
-   КОЗАЦЬКИЙ СЕРІАЛ — main.js (Повний та Оновлений)
+   КОЗАЦЬКИЙ СЕРІАЛ — main.js (Повний та Виправлений)
    ============================================= */
 
 const POST_CONFIG = {
@@ -23,11 +23,10 @@ const I18N = {
     smart_btn:      "Безкоштовний рекламний донат",
     smart_btn_locked: "⏳ Пауза до ",
     
-    // Тексти основного лендингу
     land_title:     "«Козацькі Сміхолики»",
     land_p1:        "Козаки знову оживають — не в підручниках, а у веселих коротких історіях, жартах, пригодах і сучасних мемах.",
     land_p2:        "«Козацькі Сміхолики» — це серіал коротких роликів, у якому козацький дух поєднується з гумором, народною мудрістю та українським вайбом.",
-    land_p3:        "Кожен ролик — це нова кумедна ситуація, несподіваний поворот або життєва історія, у якій легко впізнати себе, друзів чи сучасну Україну. Тут козаки можуть сперечатись через борщ, шукати скарб, “воювати” з лінощами або потрапляти в абсолютно абсурдні пригоди.",
+    land_p3:        "Кожен ролик — це нова кумедна ситуация, несподіваний поворот або життєва історія, у якій легко впізнати себе, друзів чи сучасну Україну. Тут козаки можуть сперечатись через борщ, шукати скарб, “воювати” з лінощами або потрапляти в абсолютно абсурдні пригоди.",
     land_cta1:      "Якщо «Козацькі Сміхолики» запали вам у душу — підтримайте створення нових серій. Кожна підтримка допомагає:",
     land_li1:       "створювати нові ролики;",
     land_li2:       "покращувати анімацію та озвучку;",
@@ -41,14 +40,12 @@ const I18N = {
     read_more:      "————————— читати більше",
     read_less:      "————————— згорнути",
 
-    // Тексти блоку інструкції
     inst_title:     "📢 Рекламний донат — як користуватись",
-    inst_intro:     "Рекламний донат дозволяє підтримати нас абсолютно безкоштовно! Кліком ви здійснюєте перехід по рекламі нашого партнера, за що мережа нараховує нам кошти на AI-генерацію. Перепрошуємо за специфічний вміст оголошень — це повністю автоматичний підбір мережі.",
+    inst_intro:     "Рекламний донат дозволяє підтримати нас абсолютно безкоштовно! Кліком ви вмикаєте офіційний скрипт нашого рекламного партнера Monetag, який покаже вам оголошення, за що мережа нарахує нам кошти на AI-генерацію. Перепрошуємо за специфічний вміст оголошень — це повністю автоматичний підбір мережі.",
     inst_adblock:   "⚠️ Важливо: якщо у вас увімкнений AdBlock або Brave Shields — система не зможе зарахувати донат. Будь ласка, вимкніть їх перед кліком.",
     inst_more:      "Читати інструкцію далі 👇",
     inst_less:      "Згорнути інструкцію ▲",
 
-    // Модалка пропозиції інструкції
     offer_text:     "Ви вперше натиснули на 'Рекламний донат'. Бажаєте ознайомитися з короткою інструкцією, як зробити його правильно?",
     cb_label:       "Більше не показувати це питання",
     yes_text:       "ТАК",
@@ -76,7 +73,6 @@ const I18N = {
     smart_btn:      "Free Advertising Donation",
     smart_btn_locked: "⏳ Paused until ",
     
-    // Тексти основного лендингу
     land_title:     "“Cossack Smiholiky”",
     land_p1:        "Cossacks come to life once again — not in history textbooks, but in hilarious short stories, jokes, adventures, and modern memes.",
     land_p2:        "“Cossack Smiholiky” is a short-form video series where the free Cossack spirit perfectly blends with humor, folk wisdom, and authentic Ukrainian vibes.",
@@ -94,14 +90,12 @@ const I18N = {
     read_more:      "————————— read more",
     read_less:      "————————— read less",
 
-    // Тексти блоку інструкції
     inst_title:     "📢 Advertising Donation — How to Use",
-    inst_intro:     "Advertising donation allows you to support us absolutely for free! By clicking, you navigate through our partner's ad, and the network rewards us with funds for further AI generation. We apologize if the ad content is specific — it is completely automated by the ad network.",
+    inst_intro:     "Advertising donation allows you to support us absolutely for free! By clicking, you activate the official script of our advertising partner Monetag, which will show you an ad, and the network rewards us with funds for further AI generation. We apologize if the ad content is specific — it is completely automated by the ad network.",
     inst_adblock:   "⚠️ Important: if you have AdBlock or Brave Shields active, the network cannot register your donation. Please disable them before clicking.",
     inst_more:      "Read instruction further 👇",
     inst_less:      "Collapse instruction ▲",
 
-    // Модалка пропозиції інструкції
     offer_text:     "This is your first click on 'Advertising Donation'. Would you like to read a short manual on how to do it correctly?",
     cb_label:       "Do not show this question again",
     yes_text:       "YES",
@@ -165,7 +159,7 @@ window.showAdblockMessage = function() {
   if (document.readyState === 'complete') { checkAdblock(); } else { window.addEventListener('load', checkAdblock); }
 })();
 
-// i18n РЕНДЕР ТА ОНОВЛЕННЯ СТАНУ КНОПКИ
+// i18n РЕНДЕР
 function setLang(lang) {
   const t = I18N[lang];
   if (!t) return;
@@ -182,7 +176,6 @@ function setLang(lang) {
   if(document.getElementById('js-donate-text')) document.getElementById('js-donate-text').innerHTML = t.donate_text;
   if(document.getElementById('js-next')) document.getElementById('js-next').textContent = t.next;
 
-  // Тексти лендингу
   if(document.getElementById('js-land-title')) document.getElementById('js-land-title').textContent = t.land_title;
   if(document.getElementById('js-land-p1')) document.getElementById('js-land-p1').textContent = t.land_p1;
   if(document.getElementById('js-land-p2')) document.getElementById('js-land-p2').textContent = t.land_p2;
@@ -197,7 +190,6 @@ function setLang(lang) {
     readMoreBtn.textContent = moreContent.classList.contains('expanded') ? t.read_less : t.read_more;
   }
 
-  // Інструкція
   if(document.getElementById('js-inst-title')) document.getElementById('js-inst-title').textContent = t.inst_title;
   if(document.getElementById('js-inst-intro')) document.getElementById('js-inst-intro').textContent = t.inst_intro;
   if(document.getElementById('js-inst-adblock-warn')) document.getElementById('js-inst-adblock-warn').textContent = t.inst_adblock;
@@ -208,13 +200,12 @@ function setLang(lang) {
     instMoreBtn.textContent = instMoreContent.classList.contains('expanded') ? t.inst_less : t.inst_more;
   }
 
-  // Модалка-запит
   if(document.getElementById('js-offer-text')) document.getElementById('js-offer-text').textContent = t.offer_text;
   if(document.getElementById('js-cb-label')) document.getElementById('js-cb-label').textContent = t.cb_label;
   if(document.getElementById('js-offer-yes')) document.getElementById('js-offer-yes').textContent = t.yes_text;
   if(document.getElementById('js-offer-no')) document.getElementById('js-offer-no').textContent = t.no_text;
 
-  // Динамічний стан головної смарт-кнопки (Перевірка локального таймера блокування)
+  // Динамічний стан головної смарт-кнопки
   const smartBtn = document.getElementById('js-smart-btn');
   if(smartBtn) {
     const rawSavedTime = localStorage.getItem(keyTimeHash);
@@ -222,14 +213,12 @@ function setLang(lang) {
     const now = new Date().getTime();
 
     if (taskSavedTime && now < parseInt(taskSavedTime)) {
-      // Кнопка заблокована на 24 години
       const savedTimeString = unmaskData(localStorage.getItem(keyStringHash));
       smartBtn.disabled = true;
       smartBtn.style.opacity = '0.5';
       smartBtn.style.cursor = 'not-allowed';
       smartBtn.textContent = t.smart_btn_locked + savedTimeString;
     } else {
-      // Кнопка активна
       smartBtn.disabled = false;
       smartBtn.style.opacity = '1';
       smartBtn.style.cursor = 'pointer';
@@ -271,19 +260,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const neverShowCb = document.getElementById('js-never-show-cb');
   const adminClearBtn = document.getElementById('js-admin-clear-btn');
 
-  // Оновлюємо стан кнопки при завантаженні
   setTimeout(() => {
     setLang(window._currentLang || 'uk');
   }, 100);
 
-  // --- ЛОГІКА КЛІКУ НА КНОПКУ РЕКЛАМНОГО ДОНАТУ (БЕЗ СТОРОННІХ ПОПАП-СКРИПТІВ) ---
+  // --- ЧИСТИЙ ТА БЕЗПЕЧНИЙ ЗАПУСК ОФІЦІЙНОГО ТЕГУ MONETAG ---
   function executeSmartlinkAction() {
-    // 1. Безпосереднє відкриття чистого посилання у новій вкладці
-    const targetAdUrl = "https://omg10.com/afu.php?zoneid=11041132&var=11041132&rid=XXz4jyvWNyEJSqRKY8d18w%3D%3D&rhd=false&ab2r=0&sf=1";
-    const newWindow = window.open(targetAdUrl, '_blank');
-    if (newWindow) { newWindow.opener = null; }
+    // Вмикаємо оригінальний скрипт-тег від Monetag строго у момент кліку
+    if (!document.getElementById('monetag-smartlink-script')) {
+      var script = document.createElement('script');
+      script.id = 'monetag-smartlink-script';
+      script.src = "https://quge5.com/88/tag.min.js";
+      script.setAttribute('data-zone', '242300');
+      script.async = true;
+      script.setAttribute('data-cfasync', 'false');
+      document.head.appendChild(script);
+    }
 
-    // 2. Розрахунок часу розблокування (+24 години та випадкові хвилини)
+    // Розрахунок часу блокування кнопки (+24 години та випадкові хвилини)
     const currentTime = new Date();
     const randomMinutes = Math.floor(Math.random() * (20 - 2 + 1)) + 2; 
     const unlockTimeObj = new Date(currentTime.getTime() + (24 * 60 * 60 * 1000) + (randomMinutes * 60 * 1000));
@@ -292,11 +286,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const minutes = String(unlockTimeObj.getMinutes()).padStart(2, '0');
     const timeString = `${hours}:${minutes}`;
 
-    // 3. Зберігання мітки в локальну пам'ять
+    // Записуємо лок у пам'ять
     localStorage.setItem(keyTimeHash, maskData(unlockTimeObj.getTime().toString()));
     localStorage.setItem(keyStringHash, maskData(timeString));
 
-    // 4. Миттєво блокуємо кнопку на поточній сторінці без перезавантаження
+    // Миттєво блокуємо кнопку на сторінці (попап більше не вистрілить)
     setLang(window._currentLang || 'uk');
   }
 
@@ -357,13 +351,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- СЕКРЕТНИЙ АДМІН-КЛІК: ОЧИЩЕННЯ ПАУЗИ 24 ГОДИНИ ---
+  // СЕКРЕТНИЙ АДМІН-КЛІК: ОЧИЩЕННЯ ПАУЗИ
   if (adminClearBtn) {
     adminClearBtn.addEventListener('click', () => {
       localStorage.removeItem(keyTimeHash);
       localStorage.removeItem(keyStringHash);
+      
+      // Видаляємо тег скрипта з head, якщо він там був, щоб можна було викликати знову
+      const scriptTag = document.getElementById('monetag-smartlink-script');
+      if(scriptTag) scriptTag.remove();
+
       alert('🔒 Блокування скинуто! Кнопка знову активна.');
-      location.reload(); // Перезавантажуємо сторінку для миттєвого оновлення стану
+      location.reload();
     });
   }
 

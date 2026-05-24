@@ -343,7 +343,7 @@ h1 { text-align: center; color: gold; }
   margin-top: 20px;
   color: #ffc107;
 }
-#right-shield {
+#ad-right {
   position: fixed;
   background: transparent; /* Повністю невидимий щит */
   z-index: 999999;          /* Поверх усієї реклами */
@@ -373,7 +373,7 @@ h1 { text-align: center; color: gold; }
 }
 /* 1. ДЛЯ КОМП'ЮТЕРІВ (ПК) — Накриваємо праву частину */
 @media (min-width: 769px) {
-  body.shield-active #right-shield {
+  body.shield-active #ad-right {
     display: block;
     top: 0;
     right: 0;
@@ -384,7 +384,7 @@ h1 { text-align: center; color: gold; }
 
 /* 2. ДЛЯ МОБІЛЬНИХ — Накриваємо верхню частину, де воно залипло */
 @media (max-width: 768px) {
-  body.shield-active #right-shield {
+  body.shield-active #ad-right {
     display: block;
     top: 0;        /* Притискаємо до самого верху */
     left: 0;

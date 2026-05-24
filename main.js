@@ -264,18 +264,12 @@ document.addEventListener('DOMContentLoaded', () => {
     setLang(window._currentLang || 'uk');
   }, 100);
 
-  // --- ЧИСТИЙ ТА БЕЗПЕЧНИЙ ЗАПУСК ОФІЦІЙНОГО ТЕГУ MONETAG ---
+// --- ЛОГІКА КЛІКУ НА КНОПКУ РЕКЛАМНОГО ДОНАТУ (БЕЗ СТОРОННІХ ПОПАП-СКРИПТІВ) ---
   function executeSmartlinkAction() {
-    // Вмикаємо оригінальний скрипт-тег від Monetag строго у момент кліку
-    if (!document.getElementById('monetag-smartlink-script')) {
-      var script = document.createElement('script');
-      script.id = 'monetag-smartlink-script';
-      script.src = "https://quge5.com/88/tag.min.js";
-      script.setAttribute('data-zone', '242300');
-      script.async = true;
-      script.setAttribute('data-cfasync', 'false');
-      document.head.appendChild(script);
-    }
+    // 1. Безпосереднє відкриття чистого посилання у новій вкладці
+    const targetAdUrl = "https://omg10.com/afu.php?zoneid=11041132&var=11041132&rid=XXz4jyvWNyEJSqRKY8d18w%3D%3D&rhd=false&ab2r=0&sf=1";
+    const newWindow = window.open(targetAdUrl, '_blank');
+    if (newWindow) { newWindow.opener = null; }
 
     // Розрахунок часу блокування кнопки (+24 години та випадкові хвилини)
     const currentTime = new Date();

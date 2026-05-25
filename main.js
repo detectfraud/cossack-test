@@ -24,9 +24,9 @@ const I18N = {
     ads_text:       "Реклама допомагає випускати нові серії та підтримувати проєкт.\nДякуємо за підтримку ❤️",
     next:           "Нові серії вже готуються 👀",
     post_text:      "Поширюйте цей ролик по всьому світу.\n«Ви навіть не уявляєте, як цей короткий ролик розхитує фундамент \"імперії зла\". Кожен ваш лайк, поширення чи коментар — навіть жовчний вигук ворога — це та сама крапля, що точить їхнє гниле корито, коли воно переповниться, то піде на дно так само впевнено й безславно, як їхній флагман \"Москва\". Ваша активність — це зброя, що наближає фінальне занурення»",
-    thanks_title:   "Дякуємо за допомогу! ❤️",
-    thanks_desc:    "Ти успішно підтримав козацький серіал рекламним переглядом.",
-    thanks_invite:  "Запрошуємо на наступну серію завтра о:",
+    thanks_title:   "Дякуємо! ❤️",
+    thanks_desc:    "Рекламний донат зараховано.",
+    thanks_invite:  "Запрошуємо завтра о:",
     adblock_lines:  [
       "⚠️ Схоже, у вас увімкнений блокувальник реклами.",
       "Ми створюємо цей серіал <strong>власним коштом</strong>.",
@@ -48,9 +48,9 @@ const I18N = {
     ads_text:       "Advertising helps fund new episodes and keeps the project alive.\nThank you for your support ❤️",
     next:           "More episodes are coming soon 👀",
     post_text:      "Share this video all over the world.\n«You can't even imagine how this short video shakes the foundation of the \"empire of evil\". Every like, share, or comment — even an angry reaction from the enemy — is a drop that wears down their rotten trough. When it overflows, it will sink just as surely as their flagship \"Moskva\". Your activity is a weapon that hastens the final plunge»",
-    thanks_title:   "Thanks for your support! ❤️",
-    thanks_desc:    "You have successfully supported the Cossack series with an ad view.",
-    thanks_invite:  "We invite you to the next episode tomorrow at:",
+    thanks_title:   "Thanks! ❤️",
+    thanks_desc:    "Ad donation received.",
+    thanks_invite:  "Welcome tomorrow at:",
     adblock_lines:  [
       "⚠️ It looks like you're using an ad blocker.",
       "This series is created <strong>independently</strong> and funded through ads and community support.",
@@ -85,16 +85,7 @@ function unmaskData(maskedValue) {
     const lang = window._currentLang || 'uk';
     const t    = I18N[lang] || I18N['uk'];
     const lines = t.adblock_lines.map(l => `<p>${l}</p>`).join('');
-
-    document.querySelectorAll('.ad').forEach(el => {
-      el.innerHTML = `<div class="adblock-msg">${lines}</div>`;
-    });
-
-    const stickyEl = document.getElementById('js-sticky');
-    if (stickyEl) {
-      stickyEl.innerHTML = `<div class="adblock-msg adblock-msg--sticky">${t.adblock_sticky}</div>`;
-      stickyEl.style.display = 'block';
-    }
+    document.querySelectorAll('.ad').forEach(el => { el.innerHTML = `<div class="adblock-msg">${lines}</div>`; });
   };
 
   const checkAdblock = () => {
@@ -102,24 +93,17 @@ function unmaskData(maskedValue) {
     bait.className = 'adsbox ad-unit text-ad';
     bait.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;';
     document.body.appendChild(bait);
-
     setTimeout(() => {
       const s = window.getComputedStyle(bait);
-      const blocked = bait.offsetHeight === 0 ||
-                      bait.offsetWidth  === 0 ||
-                      s.display      === 'none' ||
-                      s.visibility   === 'hidden';
+      const blocked = bait.offsetHeight === 0 || bait.offsetWidth === 0 || s.display === 'none' || s.visibility === 'hidden';
       bait.remove();
       if (blocked) showAdblockMessage();
     }, 300);
   };
-
   if (document.readyState === 'complete') { checkAdblock(); } else { window.addEventListener('load', checkAdblock); }
 })();
 
-// =============================================
-// i18n РЕНДЕР ТА КОРЕКЦІЯ СТАНУ СКЛА
-// =============================================
+// i18n РЕНДЕР
 function setLang(lang) {
   const t = I18N[lang];
   if (!t) return;
@@ -139,9 +123,9 @@ function setLang(lang) {
   document.getElementById('js-ads-text').textContent       = t.ads_text;
   document.getElementById('js-next').textContent           = t.next;
   
-  if(document.getElementById('js-thanks-title')) document.getElementById('js-thanks-title').textContent = t.thanks_title;
-  if(document.getElementById('js-thanks-desc')) document.getElementById('js-thanks-desc').textContent = t.thanks_desc;
-  if(document.getElementById('js-thanks-invite')) document.getElementById('js-thanks-invite').textContent = t.thanks_invite;
+  document.querySelectorAll('.js-thanks-title').forEach(el => el.textContent = t.thanks_title);
+  document.querySelectorAll('.js-thanks-desc').forEach(el => el.textContent = t.thanks_desc);
+  document.querySelectorAll('.js-thanks-invite').forEach(el => el.textContent = t.thanks_invite);
 
   document.getElementById('js-author-name').textContent = POST_CONFIG.author;
   document.getElementById('js-post-date').textContent   = POST_CONFIG.date;
@@ -154,127 +138,106 @@ function setLang(lang) {
 
   window._currentLang = lang;
 
-  // ПЕРЕВІРКА ХОЛДУ ТА АКТИВАЦІЯ СКЛА-ЩИТА З ПОДЯКОЮ
+  // ПЕРЕВІРКА ХОЛДУ ТА СТАНУ СКЛА
   const rawSavedTime = localStorage.getItem(keyTimeHash);
   const taskSavedTime = unmaskData(rawSavedTime);
   const now = new Date().getTime();
 
   const glassDesktop = document.getElementById('js-glass-desktop');
   const glassMobile = document.getElementById('js-glass-mobile');
-  const thanksOverlay = document.getElementById('js-thanks-overlay');
 
   if (taskSavedTime && now < parseInt(taskSavedTime)) {
     const savedTimeString = unmaskData(localStorage.getItem(keyStringHash));
-    if(document.getElementById('js-tomorrow-time-thanks')) {
-      document.getElementById('js-tomorrow-time-thanks').textContent = savedTimeString;
-    }
+    document.querySelectorAll('.js-tomorrow-time-thanks').forEach(el => el.textContent = savedTimeString);
     
-    // Показуємо плашку подяки поверх відеоплеєра
-    if (thanksOverlay) thanksOverlay.style.display = 'flex';
-
-    // Робимо скло непроникним для кліків (захист на 24 години)
     if (glassDesktop) glassDesktop.classList.add('impenetrable');
     if (glassMobile) glassMobile.classList.add('impenetrable');
   } else {
-    // Час холду минув — повертаємо активний режим збору донатів
-    if (thanksOverlay) thanksOverlay.style.display = 'none';
     if (glassDesktop) glassDesktop.classList.remove('impenetrable');
     if (glassMobile) glassMobile.classList.remove('impenetrable');
-  }
-
-  if (window._isAdblockDetected) {
-    const lines = t.adblock_lines.map(l => `<p>${l}</p>`).join('');
-    document.querySelectorAll('.ad').forEach(el => { el.innerHTML = `<div class="adblock-msg">${lines}</div>`; });
-    const stickyMsg = document.querySelector('#js-sticky .adblock-msg--sticky');
-    if (stickyMsg) stickyMsg.textContent = t.adblock_sticky;
   }
 }
 
 // =============================================
-// СИСТЕМА СКЛА: ВІДСТЕЖЕННЯ КЛІКІВ ТА ФОКУСУ
+// ЛОГІКА СКЛА ТА ПЕРЕХОПЛЕННЯ КЛІКІВ REKLAMA
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
-  const glassDesktop = document.getElementById('js-glass-desktop');
-  const glassMobile = document.getElementById('js-glass-mobile');
-  
-  let isTargetClicked = false;
+  let isUserClickedAd = false;
   let blurTimer = null;
 
-  // Функція обчислення часу розблокування через 24 години + рандом
-  function lockAdvertisingSystem() {
+  function lockSystemForDay() {
     const currentTime = new Date();
-    const randomMinutes = Math.floor(Math.random() * (20 - 2 + 1)) + 2; 
-    const unlockTimeObj = new Date(currentTime.getTime() + (24 * 60 * 60 * 1000) + (randomMinutes * 60 * 1000));
+    // Округляємо час повернення до найближчої повної години (+24 години наперед)
+    const unlockTimeObj = new Date(currentTime.getTime() + (24 * 60 * 60 * 1000));
     
+    // Округлення хвилин: якщо більше 30 — додаємо годину, хвилини скидаємо в нуль
+    if (unlockTimeObj.getMinutes() >= 30) {
+      unlockTimeObj.setHours(unlockTimeObj.getHours() + 1);
+    }
+    unlockTimeObj.setMinutes(0);
+    unlockTimeObj.setSeconds(0);
+
     const hours = String(unlockTimeObj.getHours()).padStart(2, '0');
-    const minutes = String(unlockTimeObj.getMinutes()).padStart(2, '0');
-    const timeString = `${hours}:${minutes}`;
+    const timeString = `${hours}:00`;
 
     localStorage.setItem(keyTimeHash, maskData(unlockTimeObj.getTime().toString()));
     localStorage.setItem(keyStringHash, maskData(timeString));
 
-    // Оновлюємо стан елементів сторінки
     setLang(window._currentLang || 'uk');
   }
 
-  // Обробник натискання на скло (для десктопа та мобільного)
-  function handleGlassClick(e) {
-    // Якщо активований 24-годинний захист, повністю ігноруємо будь-які кліки по склу
-    if (e.currentTarget.classList.contains('impenetrable')) {
+  // СЛУХАЄМО ВСІ КЛІКИ НА СТОРІНЦІ
+  document.addEventListener('click', (e) => {
+    const glassDesktop = document.getElementById('js-glass-desktop');
+    const glassMobile = document.getElementById('js-glass-mobile');
+
+    // Якщо холд активний і користувач клацає по стеклах — блокуємо подію намертво
+    if ((glassDesktop && glassDesktop.classList.contains('impenetrable') && glassDesktop.contains(e.target)) ||
+        (glassMobile && glassMobile.classList.contains('impenetrable') && glassMobile.contains(e.target))) {
       e.stopPropagation();
       e.preventDefault();
       return;
     }
 
-    // Фіксуємо факт кліку користувача по рекламній зоні
-    isTargetClicked = true;
-
-    // Прямий лінк з кабінету Monetag (Direct Link — Bright tag), отриманий зі скріншота
-    const monetagDirectLink = "https://quge5.com/88/tag.min.js?zone=11048688"; 
+    // Якщо холд НЕ активний, перевіряємо чи клік прийшов у зону реклами (сайдбари або верхні пуші)
+    const isClickInAdZone = e.target.closest('.sidebar') || e.target.closest('.ad') || e.clientY <= 155;
     
-    const newWindow = window.open(monetagDirectLink, '_blank');
-    if (newWindow) {
-      newWindow.opener = null;
+    if (isClickInAdZone) {
+      isUserClickedAd = true; // Фіксуємо намір заробити донат
     }
-  }
+  }, true);
 
-  if (glassDesktop) glassDesktop.addEventListener('click', handleGlassClick);
-  if (glassMobile) glassMobile.addEventListener('click', handleGlassClick);
-
-  // СЛУХАЧ ВТРАТИ ФОКУСУ СТООРІНКИ (Користувач перейшов на вкладку реклами)
+  // ВТРАТА ФОКУСУ — Юзер полетів на вкладку реклами Monetag
   window.addEventListener('blur', () => {
-    if (isTargetClicked) {
-      // Запускаємо таймер перевірки утримання на рекламній сторінці (2-3 секунди)
+    if (isUserClickedAd) {
       blurTimer = setTimeout(() => {
-        window._isUserEarnedReward = true; 
-      }, 2500);
+        window._isRewardApproved = true; 
+      }, 2500); // 2.5 секунди утримання на сторінці реклами
     }
   });
 
-  // СЛУХАЧ ПОВЕРНЕННЯ ФОКУСУ (Користувач закрив рекламу й повернувся на лендинг)
+  // ПОВЕРНЕННЯ ФОКУСУ — Юзер повернувся назад
   window.addEventListener('focus', () => {
-    if (isTargetClicked) {
-      clearTimeout(blurTimer); // Зупиняємо таймер відліку часу
+    if (isUserClickedAd) {
+      clearTimeout(blurTimer);
       
-      // Якщо користувач пробув на рекламі більше заданих секунд — зараховуємо донат
-      if (window._isUserEarnedReward) {
-        lockAdvertisingSystem();
+      if (window._isRewardApproved) {
+        lockSystemForDay(); // Вмикаємо скло на 24 години, округляємо час
       }
       
-      // Скидаємо прапори для наступних циклів
-      isTargetClicked = false;
-      window._isUserEarnedReward = false;
+      isUserClickedAd = false;
+      window._isRewardApproved = false;
     }
   });
 });
 
-// Кнопки перемикача мови
+// Перемикачі мов
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-uk').addEventListener('click', () => setLang('uk'));
   document.getElementById('btn-en').addEventListener('click', () => setLang('en'));
 });
 
-// Автоматичний старт вибору мови
+// Старт
 (function () {
   const saved    = localStorage.getItem('lang');
   const urlLang  = new URLSearchParams(window.location.search).get('lng');

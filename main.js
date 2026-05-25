@@ -76,11 +76,9 @@ window._isAdblockDetected = false;
     const lang = window._currentLang || 'uk';
     const t    = I18N[lang] || I18N['uk'];
     const lines = t.adblock_lines.map(l => `<p>${l}</p>`).join('');
-
     document.querySelectorAll('.ad').forEach(el => {
       el.innerHTML = `<div class="adblock-msg">${lines}</div>`;
     });
-
     const stickyEl = document.getElementById('js-sticky');
     if (stickyEl) {
       stickyEl.innerHTML = `<div class="adblock-msg adblock-msg--sticky">${t.adblock_sticky}</div>`;
@@ -93,24 +91,17 @@ window._isAdblockDetected = false;
     bait.className = 'adsbox ad-unit text-ad';
     bait.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;';
     document.body.appendChild(bait);
-
     setTimeout(() => {
       const s = window.getComputedStyle(bait);
-      const blocked = bait.offsetHeight === 0 ||
-                      bait.offsetWidth  === 0 ||
-                      s.display      === 'none' ||
-                      s.visibility   === 'hidden';
+      const blocked = bait.offsetHeight === 0 || bait.offsetWidth === 0 ||
+                      s.display === 'none' || s.visibility === 'hidden';
       bait.remove();
-
       if (blocked) showAdblockMessage();
     }, 300);
   };
 
-  if (document.readyState === 'complete') {
-    checkAdblock();
-  } else {
-    window.addEventListener('load', checkAdblock);
-  }
+  if (document.readyState === 'complete') checkAdblock();
+  else window.addEventListener('load', checkAdblock);
 })();
 
 // =============================================
@@ -144,13 +135,11 @@ function setLang(lang) {
   document.getElementById('btn-uk').classList.toggle('active', lang === 'uk');
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
 
-  // Мобільна назва під склом
   const mobileTitleEl = document.getElementById('js-mobile-title-text');
   if (mobileTitleEl) mobileTitleEl.textContent = t.hero;
 
   window._currentLang = lang;
 
-  // Оновлюємо переклад якщо adblock вже показується
   if (window._isAdblockDetected) {
     const lines = t.adblock_lines.map(l => `<p>${l}</p>`).join('');
     document.querySelectorAll('.ad').forEach(el => {
@@ -162,190 +151,217 @@ function setLang(lang) {
 }
 
 // =============================================
-// ДОПОМІЖНІ ФУНКЦІЇ ЧАСУ
+// u_data_ts — ЗАШИФРОВАНИЙ TIMESTAMP БЛОКУ
+// Логіка: 24год + рандом 0..20хв + округлення до 5хв вгору
+// Зберігається як XOR-обфускований рядок у localStorage
 // =============================================
+const U_DATA_KEY    = 'u_data_ts';
+const U_DATA_SALT   = 0x4B3F;        // статична сіль XOR
+const BLOCK_BASE_MS = 24 * 60 * 60 * 1000;   // 24 год
+const BLOCK_RAND_MS = 20 * 60 * 1000;         // макс рандом 20 хв
+const ROUND_MS      = 5 * 60 * 1000;          // округлення до 5 хв
 
-// Повертає рядок часу "HH:MM" для завтра о 20:00 (або будь-якого часу)
-function getTomorrowInviteTime() {
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  tomorrow.setHours(20, 0, 0, 0);
-  const h = String(tomorrow.getHours()).padStart(2, '0');
-  const m = String(tomorrow.getMinutes()).padStart(2, '0');
+function uDataEncode(ts) {
+  // XOR кожного 16-бітного слова числа з сіллю → hex рядок
+  const n = Math.floor(ts);
+  const lo = (n & 0xFFFF) ^ U_DATA_SALT;
+  const hi = ((n / 65536) & 0xFFFF) ^ (U_DATA_SALT ^ 0xA5C3);
+  return hi.toString(16).padStart(4, '0') + lo.toString(16).padStart(4, '0');
+}
+
+function uDataDecode(str) {
+  if (!str || str.length < 8) return 0;
+  const hi = parseInt(str.slice(0, 4), 16) ^ (U_DATA_SALT ^ 0xA5C3);
+  const lo = parseInt(str.slice(4, 8), 16) ^ U_DATA_SALT;
+  return hi * 65536 + lo;
+}
+
+function uDataSetBlock() {
+  const rand    = Math.floor(Math.random() * BLOCK_RAND_MS);
+  const raw     = Date.now() + BLOCK_BASE_MS + rand;
+  // Округляємо до наступного кратного 5хв
+  const rounded = Math.ceil(raw / ROUND_MS) * ROUND_MS;
+  localStorage.setItem(U_DATA_KEY, uDataEncode(rounded));
+  return rounded;
+}
+
+function uDataGetUntil() {
+  const encoded = localStorage.getItem(U_DATA_KEY);
+  if (!encoded) return 0;
+  return uDataDecode(encoded);
+}
+
+function uDataIsBlocked() {
+  return Date.now() < uDataGetUntil();
+}
+
+// Розраховуємо час запрошення з timestamp блоку
+// (показуємо час закінчення блоку — "коли можна знову")
+function getInviteTimeFromBlock(untilMs) {
+  const d = new Date(untilMs);
+  const h = String(d.getHours()).padStart(2, '0');
+  const m = String(d.getMinutes()).padStart(2, '0');
   return `${h}:${m}`;
 }
 
 // =============================================
-// POPUP GLASS — "скло" поверх двох попапів
+// POPUP GLASS
 // =============================================
-const GLASS_BLOCK_KEY   = 'glass_block_until'; // localStorage key
-const GLASS_DELAY_SHOW  = 5000;  // мс до появи "скла" після повернення фокусу
-const GLASS_FOCUS_WAIT  = 2500;  // мс очікування перед активацією таймера повернення
+const GLASS_FOCUS_WAIT_MS = 2500;  // чекаємо 2.5с після втрати фокусу
+const GLASS_SHOW_DELAY_MS = 5000;  // показуємо скло через 5с після повернення
 
 const PopupGlass = (() => {
-  let glassEl         = null;
-  let thanksEl        = null;
-  let inviteTimeEl    = null;
-  let popupClickDone  = false;  // чи було зафіксовано клік по попапу
-  let focusLostTimer  = null;   // таймер після втрати фокусу (2-3 сек)
-  let showGlassTimer  = null;   // таймер показу "скла" після повернення фокусу (5 сек)
-  let isVisible       = false;
+  let glassEl        = null;
+  let content1       = null;
+  let content2       = null;
+  let popupClickDone = false;
+  let focusLostAt    = 0;       // timestamp коли сторінка втратила фокус
+  let showTimer      = null;
+  let isVisible      = false;
 
-  // Перевіряємо чи активне 24-год блокування
-  function isBlocked() {
-    const until = localStorage.getItem(GLASS_BLOCK_KEY);
-    if (!until) return false;
-    return Date.now() < parseInt(until, 10);
-  }
-
-  // Встановлюємо 24-год блок
-  function set24hBlock() {
-    const until = Date.now() + 24 * 60 * 60 * 1000;
-    localStorage.setItem(GLASS_BLOCK_KEY, String(until));
-  }
-
-  // Показуємо "скло"
+  // --- Показати "скло" ---
   function show(withThanks) {
     if (!glassEl) return;
     isVisible = true;
-
-    if (withThanks && thanksEl) {
-      thanksEl.style.display = 'flex';
-      glassEl.classList.add('popup-glass-has-thanks');
-
-      // Оновлюємо час запрошення
-      if (inviteTimeEl) inviteTimeEl.textContent = getTomorrowInviteTime();
-
-      // Оновлюємо тексти подяки з i18n
-      const lang = window._currentLang || 'uk';
-      const t = I18N[lang] || I18N['uk'];
-      const h4 = thanksEl.querySelector('h4');
-      const p  = thanksEl.querySelector('p');
-      const spanInvite = thanksEl.querySelector('.popup-glass-time span');
-      if (h4) h4.textContent = t.glass_thanks;
-      if (p)  p.textContent  = t.glass_sub;
-      if (spanInvite) spanInvite.textContent = t.glass_invite;
-    }
-
     glassEl.style.display = 'flex';
 
-    // Якщо активне 24-год блокування — перекриваємо кліки
-    if (isBlocked()) {
-      glassEl.style.pointerEvents = 'all';
+    if (withThanks) {
+      const until = uDataGetUntil();
+      const timeStr = getInviteTimeFromBlock(until);
+
+      // Оновлюємо i18n тексти
+      const lang = window._currentLang || 'uk';
+      const t = I18N[lang] || I18N['uk'];
+
+      const h4     = document.getElementById('js-glass-h4');
+      const p      = document.getElementById('js-glass-p');
+      const label  = document.getElementById('js-glass-invite-label');
+      const time   = document.getElementById('js-glass-invite-time');
+      if (h4)    h4.textContent    = t.glass_thanks;
+      if (p)     p.textContent     = t.glass_sub;
+      if (label) label.textContent = t.glass_invite;
+      if (time)  time.textContent  = timeStr;
+
+      // Показуємо контент в обох панелях
+      if (content1) content1.classList.add('is-active');
+      if (content2) {
+        // Другу панель заповнюємо тільки часом (стислий варіант)
+        content2.innerHTML =
+          `<div class="popup-glass-time">` +
+          `<span>${t.glass_invite}</span>` +
+          `<strong>${timeStr}</strong>` +
+          `</div>`;
+        content2.classList.add('is-active');
+      }
+    }
+
+    // Блокування кліків якщо 24год активні
+    if (uDataIsBlocked()) {
+      glassEl.classList.add('is-blocking');
     } else {
-      glassEl.style.pointerEvents = 'none';
+      glassEl.classList.remove('is-blocking');
     }
   }
 
-  // Ховаємо "скло"
+  // --- Сховати "скло" ---
   function hide() {
     if (!glassEl) return;
     isVisible = false;
     glassEl.style.display = 'none';
   }
 
-  // Обробник втрати фокусу сторінки
-  function onVisibilityHidden() {
-    if (!popupClickDone) return; // скло активується тільки після кліку по попапу
-    clearTimeout(showGlassTimer);
-
-    // Запускаємо таймер 2-3 сек
-    focusLostTimer = setTimeout(() => {
-      // Якщо сторінка досі не у фокусі — "скло" готово з'явитися при поверненні
-      // (нічого додаткового не робимо — тільки фіксуємо стан)
-    }, GLASS_FOCUS_WAIT);
-  }
-
-  // Обробник повернення фокусу сторінки
-  function onVisibilityVisible() {
+  // --- Обробник втрати фокусу ---
+  function onBlur() {
     if (!popupClickDone) return;
-    clearTimeout(focusLostTimer);
-
-    // Через 5 секунд після повернення фокусу — показуємо "скло" з подякою
-    showGlassTimer = setTimeout(() => {
-      set24hBlock();
-      show(true); // з текстом подяки
-    }, GLASS_DELAY_SHOW);
+    clearTimeout(showTimer);
+    focusLostAt = Date.now();
   }
 
-  // Ініціалізація
+  // --- Обробник повернення фокусу ---
+  function onFocus() {
+    if (!popupClickDone) return;
+    // Фокус повернувся — перевіряємо чи сторінка дійсно була відкрита
+    // на іншій вкладці достатній час (> GLASS_FOCUS_WAIT_MS)
+    const away = Date.now() - focusLostAt;
+    if (focusLostAt === 0 || away < GLASS_FOCUS_WAIT_MS) return;
+
+    clearTimeout(showTimer);
+    showTimer = setTimeout(() => {
+      const until = uDataSetBlock();  // записуємо зашифрований timestamp
+      show(true);
+    }, GLASS_SHOW_DELAY_MS);
+  }
+
+  // --- Ініціалізація ---
   function init() {
-    glassEl      = document.getElementById('js-popup-glass');
-    thanksEl     = document.getElementById('js-popup-glass-thanks');
-    inviteTimeEl = document.getElementById('js-popup-invite-time');
+    glassEl   = document.getElementById('js-popup-glass');
+    content1  = document.getElementById('js-glass-content-1');
+    content2  = document.getElementById('js-glass-content-2');
 
     if (!glassEl) return;
 
     // Мобільна назва під склом
-    const isMobile = window.innerWidth <= 900;
-    const mobileTitleWrap = document.getElementById('js-mobile-title-under-glass');
-    if (isMobile && mobileTitleWrap) {
-      mobileTitleWrap.style.display = 'block';
+    if (window.innerWidth <= 900) {
+      const mobileTitle = document.getElementById('js-mobile-title-under-glass');
+      if (mobileTitle) mobileTitle.style.display = 'block';
       document.body.classList.add('has-popup-glass');
     }
 
-    // Якщо вже є 24-год блок — показуємо скло одразу з подякою
-    if (isBlocked()) {
+    // Якщо вже є активний блок — показуємо одразу з подякою
+    if (uDataIsBlocked()) {
       popupClickDone = true;
       show(true);
       return;
     }
 
-    // Показуємо порожнє "скло" одразу (без подяки)
+    // Інакше — показуємо порожнє "скло" (прозоре, без тексту)
     show(false);
 
-    // Слідкуємо за кліками по попапах
-    // Moneta/рекламні попапи зазвичай відкриваються у новому вікні,
-    // тому ловимо втрату фокусу як сигнал кліку.
-    // Додатково ловимо mousedown/touchstart на зоні попапів.
-    const popupZones = [
+    // Відслідковуємо кліки по рекламних зонах
+    // Рекламний клік = відкриття нової вкладки = blur вікна
+    const adZones = [
       document.getElementById('ad-left'),
       document.getElementById('ad-right'),
     ].filter(Boolean);
 
-    function onPopupInteraction() {
-      popupClickDone = true;
-    }
-
-    popupZones.forEach(zone => {
-      zone.addEventListener('mousedown', onPopupInteraction, { once: false });
-      zone.addEventListener('touchstart', onPopupInteraction, { once: false, passive: true });
+    adZones.forEach(zone => {
+      zone.addEventListener('mousedown',  () => { popupClickDone = true; }, { passive: true });
+      zone.addEventListener('touchstart', () => { popupClickDone = true; }, { passive: true });
     });
 
-    // Відслідковуємо фокус сторінки
+    // Фокус через visibilitychange (надійніше на мобільних)
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        onVisibilityHidden();
-      } else {
-        onVisibilityVisible();
-      }
+      if (document.hidden) onBlur();
+      else onFocus();
     });
 
-    // Додатково: window blur/focus для браузерів де visibilitychange не спрацьовує
-    window.addEventListener('blur', onVisibilityHidden);
-    window.addEventListener('focus', onVisibilityVisible);
+    // Додатково — window blur/focus (десктоп)
+    window.addEventListener('blur',  onBlur);
+    window.addEventListener('focus', onFocus);
   }
 
   return { init, show, hide };
 })();
 
 // =============================================
-// ТРАНЗИТНИЙ ПЕРЕХІД ЧЕРЕЗ GITHUB PAGES
+// ТРАНЗИТНИЙ ПЕРЕХІД (відео-оверлей)
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
-  const player = document.getElementById('js-youtube-player');
+  const overlay = document.getElementById('js-video-overlay');
+  const player  = document.getElementById('js-youtube-player');
 
-  // Якщо залишився старий оверлей на відео — видаляємо
-  const oldOverlay = document.getElementById('js-video-overlay');
-  if (oldOverlay) oldOverlay.remove();
+  if (overlay && player) {
+    overlay.addEventListener('click', (e) => {
+      e.preventDefault();
+      const transitTarget = "https://detectfraud.github.io/cossack-rada/redirect.html";
+      const newWindow = window.open(transitTarget, '_blank');
+      if (newWindow) newWindow.opener = null;
 
-  // Запускаємо плеєр по кліку в будь-якому місці відеоплеєра
-  if (player) {
-    player.addEventListener('click', () => {
       setTimeout(() => {
         player.contentWindow.postMessage(
           '{"event":"command","func":"playVideo","args":""}', '*'
         );
+        overlay.style.display = 'none';
       }, 300);
     });
   }
@@ -355,35 +371,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // =============================================
-// Кнопки перемикача мови
+// Кнопки мови
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-uk').addEventListener('click', () => setLang('uk'));
   document.getElementById('btn-en').addEventListener('click', () => setLang('en'));
-});
-
-// =============================================
-// Транзитна сторінка — відкриваємо при кліку на .ad зони
-// (замінює старий js-video-overlay)
-// =============================================
-document.addEventListener('DOMContentLoaded', () => {
-  const transitTarget = "https://detectfraud.github.io/cossack-rada/redirect.html";
-
-  const adZones = [
-    document.getElementById('ad-left'),
-    document.getElementById('ad-right'),
-  ].filter(Boolean);
-
-  adZones.forEach(zone => {
-    zone.addEventListener('click', (e) => {
-      // Не відкриваємо якщо активне 24-год блокування
-      const until = localStorage.getItem(GLASS_BLOCK_KEY);
-      if (until && Date.now() < parseInt(until, 10)) return;
-
-      const newWindow = window.open(transitTarget, '_blank');
-      if (newWindow) newWindow.opener = null;
-    });
-  });
 });
 
 // =============================================

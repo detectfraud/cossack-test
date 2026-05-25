@@ -59,17 +59,7 @@ body {
   padding: 20px;
   padding-top: 50px;
 }
-/* Стан кнопки донату, якщо детектор знайшов AdBlock */
-.donate-smart-btn.blocked-by-adblock {
-  background-color: #555555 !important;
-  color: #cccccc !important;
-  border: 1px dashed #888 !important;
-  cursor: not-allowed !important;
-  box-shadow: none !important;
-}
-.donate-smart-btn.blocked-by-adblock:hover {
-  background-color: #666666 !important;
-}
+
 /* ===== AD SLOTS ===== */
 .ad {
   background: #1e1e1e;
@@ -156,99 +146,12 @@ h1 { text-align: center; color: gold; }
   border: none; 
 }
 
-/* ===== NEW SMARTLINK DONATE STRUCTURE ===== */
-.donate-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 15px;
-}
-
-.donate-container {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  text-align: left;
-}
-
-/* Нова кнопка смартлінка */
-.donate-smart-btn {
-  background-color: #28a745;
-  color: #fff;
-  border: none;
-  padding: 14px;
-  font-size: 15px;
-  font-weight: bold;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
-  box-shadow: 0 4px 6px rgba(40, 167, 69, 0.15);
-  flex-grow: 1;
-  text-align: center;
-}
-.donate-smart-btn:hover { background-color: #218838; }
-.donate-smart-btn:active { transform: scale(0.99); }
-
-/* Оригінальна кнопка Donatello */
-.btn-donatello {
-  display: block; 
-  text-align: center;
-  padding: 14px; 
-  background: gold;
-  color: black; 
-  font-weight: bold;
-  border-radius: 10px; 
-  text-decoration: none;
-  transition: transform 0.1s;
-}
-.btn-donatello:active { transform: scale(0.99); }
-
-/* Віконце з динамічним поясненням */
-.donate-tooltip {
-  position: relative;
-  background-color: #242526;
-  border: 1px solid #3a3b3c;
-  border-radius: 8px;
-  padding: 8px 12px;
-  width: 145px;
-  height: 22px;
-  overflow: hidden;
-  transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), height 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.tooltip-title {
-  font-size: 13px;
-  font-weight: bold;
-  color: gold;
-  white-space: nowrap;
-  margin-bottom: 6px;
-}
-
-.tooltip-text {
-  font-size: 11px;
-  color: #b0b3b8;
-  line-height: 1.4;
-  opacity: 0;
-  transition: opacity 0.2s;
-  width: 250px;
-}
-
-/* Стан при наведенні миші (десктоп) або активному класі (мобільні) */
-.donate-container.active .donate-tooltip,
-.donate-container:hover .donate-tooltip {
-  width: 275px;
-  height: 125px;
-  background-color: #2f3031;
-  border-color: #4e4f50;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
-}
-
-.donate-container.active .tooltip-text,
-.donate-container:hover .tooltip-text {
-  opacity: 1;
-  transition-delay: 0.1s;
+/* ===== DONATE BUTTON ===== */
+.btn {
+  display: block; text-align: center;
+  padding: 14px; background: gold;
+  color: black; font-weight: bold;
+  border-radius: 10px; text-decoration: none;
 }
 
 /* ===== NEXT CTA ===== */
@@ -265,130 +168,11 @@ h1 { text-align: center; color: gold; }
   border-top: 1px solid #333;
   z-index: 999;
 }
-/* Стилізація лендінг-опису під плеєром */
-.land-description-section {
-  max-width: 800px;
-  margin: 30px auto 15px auto;
-  padding: 0 15px;
-  font-family: inherit;
-  color: #e0e0e0;
-  line-height: 1.6;
-  text-align: left;
-}
 
-.land-description-section h2 {
-  font-size: 24px;
-  color: #ffc107; /* Акцентний козацький жовтий/золотий колір */
-  margin-bottom: 15px;
-  font-weight: bold;
-}
-
-.land-description-section p {
-  margin-bottom: 12px;
-  font-size: 16px;
-}
-
-/* Логіка прихованого контенту */
-.more-content {
-  display: none; /* Спочатку сховано */
-}
-
-.more-content.expanded {
-  display: block; /* Показуємо при кліку */
-}
-
-/* Стиль посилання-кнопки "читати більше" */
-.read-more-link {
-  background: none;
-  border: none;
-  color: #007bff;
-  font-size: 15px;
-  cursor: pointer;
-  padding: 5px 0;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-.read-more-link:hover {
-  color: #0056b3;
-  text-decoration: underline;
-}
-
-/* Списки переваг */
-.land-list {
-  list-style: none;
-  padding-left: 20px;
-  margin-bottom: 15px;
-}
-.land-list li {
-  position: relative;
-  margin-bottom: 8px;
-  font-size: 15px;
-}
-.land-list li::before {
-  content: "•";
-  color: #ffc107; /* Жовті маркери списку */
-  font-weight: bold;
-  position: absolute;
-  left: -15px;
-}
-
-.cta-lead {
-  font-weight: bold;
-  margin-top: 15px;
-  color: #fff;
-}
-
-.land-footer-text {
-  font-style: italic;
-  margin-top: 20px;
-  color: #ffc107;
-}
-#ad-right {
-  position: fixed;
-  background: transparent; /* Повністю невидимий щит */
-  z-index: 999999;          /* Поверх усієї реклами */
-  display: none;            /* Вмикається тільки коли діє пауза (.shield-active) */
-}
-/* Контейнер під кнопку донату внизу ленду */
-.land-cta-action {
-  text-align: center;
-  margin: 20px auto 40px auto;
-}
 /* ===== MOBILE ===== */
 @media (max-width: 900px) {
   .wrapper { display: block; }
   .sidebar { display: none; }
   .content { margin: 0; max-width: 100%; }
   .sticky  { display: none !important; }
-  
-  .donate-container {
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-  }
-  .donate-smart-btn { width: 100%; }
-  .donate-tooltip { width: auto; height: 22px; transition: height 0.3s; }
-  .donate-container.active .donate-tooltip { width: auto; height: 115px; }
-  .tooltip-text { width: 100%; }
-}
-/* 1. ДЛЯ КОМП'ЮТЕРІВ (ПК) — Накриваємо праву частину */
-@media (min-width: 769px) {
-  body.shield-active #ad-right {
-    display: block;
-    top: 0;
-    right: 0;
-    width: 35vw;   /* Закриваємо 35% екрану справа */
-    height: 100vh; /* На всю висоту екрану */
-  }
-}
-
-/* 2. ДЛЯ МОБІЛЬНИХ — Накриваємо верхню частину, де воно залипло */
-@media (max-width: 768px) {
-  body.shield-active #ad-right {
-    display: block;
-    top: 0;        /* Притискаємо до самого верху */
-    left: 0;
-    width: 100vw;  /* На всю ширину телефона */
-    height: 15vh;  /* Закриваємо верхні 15% екрану (якраз під мобільний банер) */
-  }
 }

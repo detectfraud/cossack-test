@@ -40,9 +40,9 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 2147483647 !important; /* Навіть вище ніж елементи Monetag */
+  z-index: 2147483647 !important; /* Рівень вище ніж будь-які елементи Monetag */
   background: rgba(0, 0, 0, 0);   /* Абсолютно прозоре в звичайному стані */
-  pointer-events: none;           /* Кліки вільно летять крізь нього в рекламу */
+  pointer-events: auto;           /* Дозволяємо ловити перший клік для запуску direct link */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,12 +61,13 @@ body {
   box-shadow: 0 4px 25px rgba(0,0,0,0.9);
   max-width: 320px;
   width: 90%;
+  z-index: 2147483647 !important;
 }
 
 /* АКТИВНИЙ ХОЛД: Залізна штора зачиняється */
 .ad-glass-universal.impenetrable {
-  pointer-events: auto !important;             /* Тепер скло ловить ВСІ кліки на себе */
-  background: rgba(15, 15, 15, 0.98) !important; /* Чорніє, ізолюючи сайт і попапи під собою */
+  pointer-events: auto !important;             /* Скло закриває доступ до кліків */
+  background: rgba(15, 15, 15, 0.98) !important; /* Повністю чорніє та ізолює попапи знизу */
 }
 
 /* Показуємо картку подяки тільки коли холд увімкнено */
@@ -74,7 +75,7 @@ body {
   display: block !important;
 }
 
-/* Стилі тексту */
+/* Стилі тексту всередині картки */
 .thanks-content-universal h4 { color: gold; margin: 0 0 5px 0; font-size: 18px; }
 .thanks-content-universal p { color: #ccc; margin: 0 0 15px 0; font-size: 14px; }
 .time-block { background: #222; padding: 8px; border-radius: 6px; border: 1px solid #333; }

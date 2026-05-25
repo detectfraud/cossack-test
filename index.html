@@ -9,6 +9,19 @@
 </head>
 <body>
 
+<div id="js-video-overlay">
+  <div id="js-thanks-overlay" style="display: none;">
+    <div class="thanks-content">
+      <h4>Дякуємо за допомогу! ❤️</h4>
+      <p>Ти успішно підтримав козацький серіал рекламним переглядом.</p>
+      <div class="thanks-time-box">
+        <span>Запрошуємо на наступну серію завтра о:</span>
+        <span id="js-tomorrow-time-thanks">00:00</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="lang-switcher">
   <button class="lang-btn active" id="btn-uk">UA</button>
   <button class="lang-btn"        id="btn-en">EN</button>
@@ -42,20 +55,7 @@
         </div>
         <p class="fb-post-text" id="js-post-text"></p>
         
-<div class="video-container" style="position: relative;">
-          <div id="js-video-overlay" style="position: absolute; inset: 0; z-index: 10; cursor: pointer; background: rgba(0,0,0,0);"></div>
-
-          <div id="js-thanks-overlay" style="display: none; position: absolute; inset: 0; z-index: 11; background: rgba(15, 15, 15, 0.95); align-items: center; justify-content: center; padding: 20px; text-align: center; border: 2px solid gold; border-radius: inherit;">
-            <div style="color: #fff; font-family: sans-serif;">
-              <h4 style="color: gold; margin: 0 0 10px 0; font-size: 18px;">Дякуємо за допомогу! ❤️</h4>
-              <p style="font-size: 13px; margin: 0 0 15px 0; color: #ccc; line-height: 1.5;">Ти успішно підтримав козацький серіал рекламним переглядом.</p>
-              <div style="background: #222; padding: 8px 15px; border-radius: 6px; display: inline-block; border: 1px solid #444;">
-                <span style="font-size: 11px; color: #888; display: block;">Запрошуємо на наступну серію завтра о:</span>
-                <span id="js-tomorrow-time-thanks" style="font-size: 18px; font-weight: bold; color: gold;">00:00</span>
-              </div>
-            </div>
-          </div>
-
+        <div class="video-container" style="position: relative;">
           <iframe
             id="js-youtube-player"
             src="https://www.youtube.com/embed/iIcqtIL6XqU?rel=0&modestbranding=1&showinfo=0&enablejsapi=1"
@@ -108,11 +108,7 @@
 
 <div class="sticky" id="js-sticky"></div>
 
-<script>(function(s){s.dataset.zone='11040513',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>   
-
+<script>(function(s){s.dataset.zone='11040513',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <script src="main.js"></script>
-
-
-
 </body>
 </html>

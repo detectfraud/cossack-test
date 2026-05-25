@@ -10,11 +10,11 @@ body {
   color: #fff;
 }
 
-/* ===== LANG SWITCHER (ПЕРЕНЕСЕНО НАЛІВО) ===== */
+/* ===== LANG SWITCHER — перенесено ВЛІВО ===== */
 .lang-switcher {
   position: fixed;
   top: 12px;
-  left: 16px;
+  left: 16px;   /* було right: 16px */
   z-index: 1000;
   display: flex;
   gap: 6px;
@@ -33,72 +33,6 @@ body {
 .lang-btn:hover { border-color: gold; color: gold; }
 .lang-btn.active { background: gold; color: #000; border-color: gold; }
 
-/* ===== ГЛОБАЛЬНЕ СКЛО ДЛЯ РЕКЛАМИ ===== */
-#js-video-overlay {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  width: 340px;  
-  height: 180px; 
-  z-index: 2000; 
-  cursor: pointer;
-  background: rgba(0, 0, 0, 0); 
-}
-
-/* Активний стан: блокування кліків на 24 години + вирівнювання подяки по центру */
-#js-video-overlay.impenetrable {
-  position: fixed;
-  inset: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  background: rgba(15, 15, 15, 0.96); /* Темне тло замість контенту */
-  cursor: default;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* СТИЛІ ПЛАШКИ ПОДЯКИ НА СКЛІ */
-#js-thanks-overlay {
-  max-width: 400px;
-  width: 90%;
-  padding: 25px;
-  text-align: center;
-  border: 2px solid gold;
-  border-radius: 12px;
-  background: #111;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-}
-.thanks-content h4 {
-  color: gold;
-  margin: 0 0 12px 0;
-  font-size: 20px;
-}
-.thanks-content p {
-  font-size: 14px;
-  margin: 0 0 20px 0;
-  color: #ccc;
-  line-height: 1.5;
-}
-.thanks-time-box {
-  background: #222;
-  padding: 10px 15px;
-  border-radius: 8px;
-  display: inline-block;
-  border: 1px solid #444;
-}
-.thanks-time-box span {
-  font-size: 12px;
-  color: #888;
-  display: block;
-  margin-bottom: 4px;
-}
-#js-tomorrow-time-thanks {
-  font-size: 22px;
-  font-weight: bold;
-  color: gold;
-}
-
 /* ===== LAYOUT ===== */
 .wrapper {
   max-width: 1200px;
@@ -108,7 +42,7 @@ body {
 }
 
 .sidebar {
-  width: 180px; 
+  width: 180px;
   padding: 10px;
   flex-shrink: 0;
 }
@@ -135,11 +69,122 @@ body {
   max-width: 160px;
   min-height: 600px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   color: #777;
   font-size: 12px;
+  overflow: visible; /* важливо для popup-glass */
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 0;
+  position: relative;
+}
+
+/* ===== POPUP WRAP (рекламні попапи всередині .ad) ===== */
+.popup-wrap {
+  width: 100%;
+  position: relative;
+}
+
+.popup-slot {
+  width: 100%;
+  min-height: 120px;
+  background: #2a2a2a;
+  border-radius: 8px;
   overflow: hidden;
+}
+
+/* ===== POPUP GLASS — "скло" поверх двох попапів ===== */
+/*
+  Desktop: фіксований блок у правій частині екрану,
+  охоплює обидва попапи (#ad-right).
+  Розмір і позиція відповідають скріншоту (desktop):
+  ~200px шириною, вирівнюється по правій колонці.
+*/
+.popup-glass {
+  position: fixed;
+  top: 16px;
+  right: 8px;
+  width: 200px;
+  z-index: 9000;
+  pointer-events: auto; /* після 24год блокує кліки */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Два "скляних" блоки — імітують два попапи зі скріншота */
+.popup-glass::before,
+.popup-glass::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 76px; /* висота одного рекламного попапу зі скріншота */
+  background: rgba(15, 15, 15, 0.82);
+  border: 1.5px solid rgba(255, 215, 0, 0.35);
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Внутрішній контент "скла" (подяка) */
+.popup-glass-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.popup-glass-thanks {
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+.popup-glass-thanks h4 {
+  color: gold;
+  margin: 0 0 6px;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.popup-glass-thanks p {
+  font-size: 11px;
+  color: #ccc;
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+.popup-glass-time {
+  background: #222;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  display: inline-block;
+}
+
+.popup-glass-time span {
+  font-size: 10px;
+  color: #888;
+  display: block;
+}
+
+.popup-glass-time strong {
+  font-size: 16px;
+  font-weight: bold;
+  color: gold;
+}
+
+/* Висота "скла" = два попапи + gap між ними */
+.popup-glass-has-thanks {
+  height: calc(76px * 2 + 6px);
 }
 
 /* ===== ADBLOCK MESSAGE ===== */
@@ -196,20 +241,20 @@ h1 { text-align: center; color: gold; }
 .fb-stat { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #8a8d91; }
 
 /* ===== YOUTUBE VIDEO ===== */
-.video-container { 
-  width: 100%; 
+.video-container {
+  width: 100%;
   position: relative;
   padding-bottom: 56.25%;
   height: 0;
-  overflow: hidden; 
+  overflow: hidden;
 }
-.video-container iframe { 
+.video-container iframe {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100% !important; 
-  height: 100% !important; 
-  border: none; 
+  width: 100% !important;
+  height: 100% !important;
+  border: none;
 }
 
 /* ===== DONATE BUTTON ===== */
@@ -235,22 +280,70 @@ h1 { text-align: center; color: gold; }
   z-index: 999;
 }
 
+/* ===== MOBILE TITLE UNDER GLASS ===== */
+.mobile-title-under-glass {
+  display: none; /* показується через JS на мобільних */
+  text-align: center;
+  color: gold;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+  padding: 10px 16px 6px;
+  background: #0f0f0f;
+}
+
 /* ===== MOBILE ===== */
 @media (max-width: 900px) {
   .wrapper { display: block; }
   .sidebar { display: none; }
-  .content { 
-    margin: 0; 
-    max-width: 100%; 
-    padding-top: 160px; 
-  }
+  .content { margin: 0; max-width: 100%; }
   .sticky  { display: none !important; }
 
-  #js-video-overlay {
+  /*
+    На мобільних "скло" — фіксований блок зверху,
+    займає всю ширину екрану, два попапи стекаються вертикально.
+    Назва ленду розміщується під "склом" (mobile-title-under-glass).
+  */
+  .popup-glass {
+    position: fixed;
     top: 0;
-    right: 0;
     left: 0;
+    right: 0;
     width: 100%;
-    height: 140px; 
+    z-index: 9000;
+    flex-direction: column;
+    gap: 4px;
+    padding: 4px 8px 0;
+    background: transparent;
+  }
+
+  /* На мобільному два псевдоелементи стають горизонтальними банерами */
+  .popup-glass::before,
+  .popup-glass::after {
+    width: 100%;
+    height: 68px; /* висота одного банеру на мобільному (зі скріншота) */
+    border-radius: 8px;
+  }
+
+  .popup-glass-has-thanks {
+    height: calc(68px * 2 + 4px);
+  }
+
+  /* Зсунути контент донизу, щоб не перекривав "скло" */
+  body.has-popup-glass .content {
+    padding-top: calc(68px * 2 + 4px + 8px + 36px); /* 2 банери + gap + відступ + назва під склом */
+  }
+
+  .mobile-title-under-glass {
+    position: fixed;
+    top: calc(68px * 2 + 4px + 4px);
+    left: 0;
+    right: 0;
+    z-index: 8999;
+    display: block;
+    font-size: 16px;
+    padding: 6px 16px 4px;
+    background: #0f0f0f;
+    border-bottom: 1px solid #222;
   }
 }

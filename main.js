@@ -18,7 +18,7 @@ const I18N = {
     sub:            "Відео, яке зібрало мільйони переглядів в Facebook, стало початком серії мемів про козаків.",
     before_video:   "Перша серія, з якої все почалося 👇",
     donate_heading: "❤️ Підтримати серіал",
-    donate_text:    "Ми створюємо цей серіал власним коштом.\nAI-сервіси, генерація сцен, монтаж та створення нових серій потребують ресурсів.\nЯкщо тобі подобається цей проєкт — підтримай його розвиток ❤️",
+    donate_text:    "Ми створюємо цей серіал власним коштом.\nAI-сервіси, генерація сцен, монтаж та створення нових серій потребують ресурсів.\nЯкщо тобі подобається цей проєкт — підтримай його развитие ❤️",
     donate_btn:     "Підтримати серіал",
     ads_heading:    "📢 Монетизація",
     ads_text:       "Реклама допомагає випускати нові серії та підтримувати проєкт.\nДякуємо за підтримку ❤️",
@@ -185,6 +185,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setLang(window._currentLang || 'uk');
   }
+
+  // Примусова зачистка сторонніх фреймів та попапів від Monetag під час холду
+  function hardCleanAds() {
+    const rawSavedTime = localStorage.getItem(keyTimeHash);
+    const taskSavedTime = unmaskData(rawSavedTime);
+    const now = new Date().getTime();
+
+    // Якщо холд активний, жорстко видаляємо динамічні банери
+    if (taskSavedTime && now < parseInt(taskSavedTime)) {
+      document.querySelectorAll('iframe:not(#js-youtube-player), div[id*="zone"], div[class*="banner"], div[id*="inpage"]').forEach(el => {
+        el.remove();
+      });
+    }
+  }
+  // Перевіряємо та вичищаємо сміття кожні 500мс
+  setInterval(hardCleanAds, 500);
 
   // СЛУХАЄМО ВСІ КЛІКИ НА СТОРІНЦІ
   document.addEventListener('click', (e) => {

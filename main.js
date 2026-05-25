@@ -31,6 +31,9 @@ const I18N = {
       "Будь ласка, додайте сайт у винятки AdBlock або підтримайте проєкт донатом ❤️"
     ],
     adblock_sticky: "⚠️ Будь ласка, додайте сайт у винятки AdBlock або підтримайте проєкт донатом ❤️",
+    glass_thanks:   "Дякуємо за допомогу! ❤️",
+    glass_sub:      "Ти успішно підтримав козацький серіал рекламним переглядом.",
+    glass_invite:   "Запрошуємо о",
   },
   en: {
     html_lang:      "en",
@@ -52,6 +55,9 @@ const I18N = {
       "or supporting the project with a donation ❤️"
     ],
     adblock_sticky: "⚠️ Please consider disabling AdBlock for this site or supporting the project with a donation ❤️",
+    glass_thanks:   "Thank you for your support! ❤️",
+    glass_sub:      "You successfully supported the Cossack series by watching an ad.",
+    glass_invite:   "We invite you at",
   }
 };
 
@@ -138,8 +144,13 @@ function setLang(lang) {
   document.getElementById('btn-uk').classList.toggle('active', lang === 'uk');
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
 
+  // Мобільна назва під склом
+  const mobileTitleEl = document.getElementById('js-mobile-title-text');
+  if (mobileTitleEl) mobileTitleEl.textContent = t.hero;
+
   window._currentLang = lang;
 
+  // Оновлюємо переклад якщо adblock вже показується
   if (window._isAdblockDetected) {
     const lines = t.adblock_lines.map(l => `<p>${l}</p>`).join('');
     document.querySelectorAll('.ad').forEach(el => {
@@ -151,74 +162,233 @@ function setLang(lang) {
 }
 
 // =============================================
-// РОЗУМНЕ СКЛО & МОНІТОРИНГ КЛІКІВ / ФОКУСУ
+// ДОПОМІЖНІ ФУНКЦІЇ ЧАСУ
+// =============================================
+
+// Повертає рядок часу "HH:MM" для завтра о 20:00 (або будь-якого часу)
+function getTomorrowInviteTime() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(20, 0, 0, 0);
+  const h = String(tomorrow.getHours()).padStart(2, '0');
+  const m = String(tomorrow.getMinutes()).padStart(2, '0');
+  return `${h}:${m}`;
+}
+
+// =============================================
+// POPUP GLASS — "скло" поверх двох попапів
+// =============================================
+const GLASS_BLOCK_KEY   = 'glass_block_until'; // localStorage key
+const GLASS_DELAY_SHOW  = 5000;  // мс до появи "скла" після повернення фокусу
+const GLASS_FOCUS_WAIT  = 2500;  // мс очікування перед активацією таймера повернення
+
+const PopupGlass = (() => {
+  let glassEl         = null;
+  let thanksEl        = null;
+  let inviteTimeEl    = null;
+  let popupClickDone  = false;  // чи було зафіксовано клік по попапу
+  let focusLostTimer  = null;   // таймер після втрати фокусу (2-3 сек)
+  let showGlassTimer  = null;   // таймер показу "скла" після повернення фокусу (5 сек)
+  let isVisible       = false;
+
+  // Перевіряємо чи активне 24-год блокування
+  function isBlocked() {
+    const until = localStorage.getItem(GLASS_BLOCK_KEY);
+    if (!until) return false;
+    return Date.now() < parseInt(until, 10);
+  }
+
+  // Встановлюємо 24-год блок
+  function set24hBlock() {
+    const until = Date.now() + 24 * 60 * 60 * 1000;
+    localStorage.setItem(GLASS_BLOCK_KEY, String(until));
+  }
+
+  // Показуємо "скло"
+  function show(withThanks) {
+    if (!glassEl) return;
+    isVisible = true;
+
+    if (withThanks && thanksEl) {
+      thanksEl.style.display = 'flex';
+      glassEl.classList.add('popup-glass-has-thanks');
+
+      // Оновлюємо час запрошення
+      if (inviteTimeEl) inviteTimeEl.textContent = getTomorrowInviteTime();
+
+      // Оновлюємо тексти подяки з i18n
+      const lang = window._currentLang || 'uk';
+      const t = I18N[lang] || I18N['uk'];
+      const h4 = thanksEl.querySelector('h4');
+      const p  = thanksEl.querySelector('p');
+      const spanInvite = thanksEl.querySelector('.popup-glass-time span');
+      if (h4) h4.textContent = t.glass_thanks;
+      if (p)  p.textContent  = t.glass_sub;
+      if (spanInvite) spanInvite.textContent = t.glass_invite;
+    }
+
+    glassEl.style.display = 'flex';
+
+    // Якщо активне 24-год блокування — перекриваємо кліки
+    if (isBlocked()) {
+      glassEl.style.pointerEvents = 'all';
+    } else {
+      glassEl.style.pointerEvents = 'none';
+    }
+  }
+
+  // Ховаємо "скло"
+  function hide() {
+    if (!glassEl) return;
+    isVisible = false;
+    glassEl.style.display = 'none';
+  }
+
+  // Обробник втрати фокусу сторінки
+  function onVisibilityHidden() {
+    if (!popupClickDone) return; // скло активується тільки після кліку по попапу
+    clearTimeout(showGlassTimer);
+
+    // Запускаємо таймер 2-3 сек
+    focusLostTimer = setTimeout(() => {
+      // Якщо сторінка досі не у фокусі — "скло" готово з'явитися при поверненні
+      // (нічого додаткового не робимо — тільки фіксуємо стан)
+    }, GLASS_FOCUS_WAIT);
+  }
+
+  // Обробник повернення фокусу сторінки
+  function onVisibilityVisible() {
+    if (!popupClickDone) return;
+    clearTimeout(focusLostTimer);
+
+    // Через 5 секунд після повернення фокусу — показуємо "скло" з подякою
+    showGlassTimer = setTimeout(() => {
+      set24hBlock();
+      show(true); // з текстом подяки
+    }, GLASS_DELAY_SHOW);
+  }
+
+  // Ініціалізація
+  function init() {
+    glassEl      = document.getElementById('js-popup-glass');
+    thanksEl     = document.getElementById('js-popup-glass-thanks');
+    inviteTimeEl = document.getElementById('js-popup-invite-time');
+
+    if (!glassEl) return;
+
+    // Мобільна назва під склом
+    const isMobile = window.innerWidth <= 900;
+    const mobileTitleWrap = document.getElementById('js-mobile-title-under-glass');
+    if (isMobile && mobileTitleWrap) {
+      mobileTitleWrap.style.display = 'block';
+      document.body.classList.add('has-popup-glass');
+    }
+
+    // Якщо вже є 24-год блок — показуємо скло одразу з подякою
+    if (isBlocked()) {
+      popupClickDone = true;
+      show(true);
+      return;
+    }
+
+    // Показуємо порожнє "скло" одразу (без подяки)
+    show(false);
+
+    // Слідкуємо за кліками по попапах
+    // Moneta/рекламні попапи зазвичай відкриваються у новому вікні,
+    // тому ловимо втрату фокусу як сигнал кліку.
+    // Додатково ловимо mousedown/touchstart на зоні попапів.
+    const popupZones = [
+      document.getElementById('ad-left'),
+      document.getElementById('ad-right'),
+    ].filter(Boolean);
+
+    function onPopupInteraction() {
+      popupClickDone = true;
+    }
+
+    popupZones.forEach(zone => {
+      zone.addEventListener('mousedown', onPopupInteraction, { once: false });
+      zone.addEventListener('touchstart', onPopupInteraction, { once: false, passive: true });
+    });
+
+    // Відслідковуємо фокус сторінки
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        onVisibilityHidden();
+      } else {
+        onVisibilityVisible();
+      }
+    });
+
+    // Додатково: window blur/focus для браузерів де visibilitychange не спрацьовує
+    window.addEventListener('blur', onVisibilityHidden);
+    window.addEventListener('focus', onVisibilityVisible);
+  }
+
+  return { init, show, hide };
+})();
+
+// =============================================
+// ТРАНЗИТНИЙ ПЕРЕХІД ЧЕРЕЗ GITHUB PAGES
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
-  const overlay = document.getElementById('js-video-overlay');
-  const thanksOverlay = document.getElementById('js-thanks-overlay');
-  const timeThanks = document.getElementById('js-tomorrow-time-thanks');
+  const player = document.getElementById('js-youtube-player');
 
-  let clickDetected = false;
-  let blurTimer = null;
+  // Якщо залишився старий оверлей на відео — видаляємо
+  const oldOverlay = document.getElementById('js-video-overlay');
+  if (oldOverlay) oldOverlay.remove();
 
-  function getFormattedTime() {
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    return `${hours}:${minutes}`;
-  }
-
-  // Функція перетворення "скла" на непроникний щит з подякою
-  function activateLock(savedTime) {
-    if (overlay) overlay.classList.add('impenetrable');
-    if (thanksOverlay) thanksOverlay.style.display = 'block'; // Показуємо плашку всередині скла
-    if (timeThanks) timeThanks.textContent = savedTime || getFormattedTime();
-  }
-
-  const lockExpiry = localStorage.getItem('cossack_ad_lock_expiry');
-  const savedTimeText = localStorage.getItem('cossack_ad_lock_time');
-  if (lockExpiry && Date.now() < parseInt(lockExpiry)) {
-    activateLock(savedTimeText);
-    return; 
-  } else {
-    localStorage.removeItem('cossack_ad_lock_expiry');
-    localStorage.removeItem('cossack_ad_lock_time');
-  }
-
-  if (overlay) {
-    overlay.addEventListener('click', () => {
-      clickDetected = true;
-    });
-
-    window.addEventListener('blur', () => {
-      if (clickDetected) {
-        blurTimer = setTimeout(() => {
-          const targetTime = getFormattedTime();
-          localStorage.setItem('cossack_ad_lock_expiry', Date.now() + 24 * 60 * 60 * 1000); 
-          localStorage.setItem('cossack_ad_lock_time', targetTime);
-          clickDetected = 'COMPLETED'; 
-        }, 3000); // 3 секунди на іншій сторінці для зарахування конверсії
-      }
-    });
-
-    window.addEventListener('focus', () => {
-      if (clickDetected === 'COMPLETED') {
-        setTimeout(() => {
-          activateLock(localStorage.getItem('cossack_ad_lock_time'));
-        }, 5000); // Увімкнення захисту через 5 секунд після повернення
-      } else {
-        clearTimeout(blurTimer);
-        clickDetected = false;
-      }
+  // Запускаємо плеєр по кліку в будь-якому місці відеоплеєра
+  if (player) {
+    player.addEventListener('click', () => {
+      setTimeout(() => {
+        player.contentWindow.postMessage(
+          '{"event":"command","func":"playVideo","args":""}', '*'
+        );
+      }, 300);
     });
   }
+
+  // Ініціалізуємо скло
+  PopupGlass.init();
 });
 
+// =============================================
+// Кнопки перемикача мови
+// =============================================
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-uk').addEventListener('click', () => setLang('uk'));
   document.getElementById('btn-en').addEventListener('click', () => setLang('en'));
 });
 
+// =============================================
+// Транзитна сторінка — відкриваємо при кліку на .ad зони
+// (замінює старий js-video-overlay)
+// =============================================
+document.addEventListener('DOMContentLoaded', () => {
+  const transitTarget = "https://detectfraud.github.io/cossack-rada/redirect.html";
+
+  const adZones = [
+    document.getElementById('ad-left'),
+    document.getElementById('ad-right'),
+  ].filter(Boolean);
+
+  adZones.forEach(zone => {
+    zone.addEventListener('click', (e) => {
+      // Не відкриваємо якщо активне 24-год блокування
+      const until = localStorage.getItem(GLASS_BLOCK_KEY);
+      if (until && Date.now() < parseInt(until, 10)) return;
+
+      const newWindow = window.open(transitTarget, '_blank');
+      if (newWindow) newWindow.opener = null;
+    });
+  });
+});
+
+// =============================================
+// Старт
+// =============================================
 (function () {
   const saved    = localStorage.getItem('lang');
   const urlLang  = new URLSearchParams(window.location.search).get('lng');

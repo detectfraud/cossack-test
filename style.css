@@ -33,95 +33,52 @@ body {
 .lang-btn:hover { border-color: gold; color: gold; }
 .lang-btn.active { background: gold; color: #000; border-color: gold; }
 
-/* ===== РОЗУМНА СИСТЕМА СКЛА-ЩИТІВ ===== */
-/* Настільна зона (правий сайдбар) */
-.ad-glass-desktop {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: calc((100vw - 800px) / 2);
-  min-width: 180px;
-  height: 100vh;
-  z-index: 2147483647 !important; /* Максимальний браузерний рівень для перекриття Monetag */
-  background: rgba(0, 0, 0, 0);
-  pointer-events: none; /* Кліки вільно летять у попапи під склом, поки немає холду */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s ease;
-}
-
-/* Мобільна зона (верхні 155px під два пуші) */
-.ad-glass-mobile {
+/* ===== СУЦІЛЬНИЙ ЩИТ ПОВЕРХ УСЬОГО ===== */
+.ad-glass-universal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
-  height: 155px;
-  z-index: 2147483647 !important;
+  height: 100vh;
+  z-index: 2147483647 !important; /* Максимальний пріоритет над Monetag */
   background: rgba(0, 0, 0, 0);
-  pointer-events: none;
-  display: none;
+  pointer-events: none; /* Пропускає кліки, поки холд не активний */
+  display: flex;
   align-items: center;
   justify-content: center;
   transition: background 0.3s ease;
 }
 
-/* Вміст блоку подяки (ховається за замовчуванням) */
-.ad-glass-desktop .thanks-content,
-.ad-glass-mobile .thanks-content-mobile {
+/* Блок подяки строго по центру екрана */
+.thanks-content-universal {
   display: none;
   background: #111;
   border: 2px solid gold;
-  padding: 15px;
-  border-radius: 8px;
+  padding: 25px;
+  border-radius: 12px;
   text-align: center;
   font-family: sans-serif;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+  box-shadow: 0 4px 25px rgba(0,0,0,0.9);
+  max-width: 320px;
+  width: 90%;
 }
 
-.ad-glass-desktop .thanks-content { width: 90%; }
-.ad-glass-mobile .thanks-content-mobile {
-  width: 95%;
-  padding: 8px;
-  font-size: 12px;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  gap: 5px;
+/* АКТИВНИЙ ХОЛД: перекриваємо весь екран намертво */
+.ad-glass-universal.impenetrable {
+  pointer-events: auto !important; /* Жоден клік не пройде до реклами */
+  background: rgba(15, 15, 15, 0.98) !important; /* Чорний непрозорий фон ховає попапи */
 }
 
-/* СТАН АКТИВНОГО ХОЛДУ: Скло закривається намертво і показує подяку */
-.ad-glass-desktop.impenetrable,
-.ad-glass-mobile.impenetrable {
-  pointer-events: auto !important; /* Тепер кліки повністю заблоковані */
-  background: rgba(15, 15, 15, 0.98) !important; /* Чорніє, намертво ховаючи під собою банери */
-}
-
-.ad-glass-desktop.impenetrable .thanks-content {
+.ad-glass-universal.impenetrable .thanks-content-universal {
   display: block;
 }
-.ad-glass-mobile.impenetrable .thanks-content-mobile {
-  display: flex;
-}
 
-/* КРИТИЧНИЙ СЕЛЕКТОР: Якщо хоч одне скло активоване — ми повністю гасимо 
-   фізичні контейнери реклами на сторінці та вбудовані пуші Monetag */
-body:has(.impenetrable) .sidebar,
-body:has(.impenetrable) .ad,
-body:has(.impenetrable) [class*="native-banner"],
-body:has(.impenetrable) [id*="inpage-push"] {
-  display: none !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-/* Стилі тексту всередині скла */
-.thanks-content h4 { color: gold; margin: 0 0 5px 0; font-size: 16px; }
-.thanks-content p { color: #ccc; margin: 0 0 10px 0; font-size: 13px; }
-.time-block { background: #222; padding: 6px; border-radius: 4px; border: 1px solid #333; }
-.time-block span { display: block; font-size: 11px; color: #888; }
-.class-time { font-size: 16px; font-weight: bold; color: gold !important; }
+/* Стилі тексту */
+.thanks-content-universal h4 { color: gold; margin: 0 0 5px 0; font-size: 18px; }
+.thanks-content-universal p { color: #ccc; margin: 0 0 15px 0; font-size: 14px; }
+.time-block { background: #222; padding: 8px; border-radius: 6px; border: 1px solid #333; }
+.time-block span { display: block; font-size: 12px; color: #888; }
+.class-time { font-size: 18px; font-weight: bold; color: gold !important; margin-top: 2px; }
 
 /* ===== LAYOUT ===== */
 .wrapper {
@@ -165,7 +122,4 @@ body:has(.impenetrable) [id*="inpage-push"] {
   .wrapper { display: block; }
   .sidebar { display: none; }
   .content { margin: 0; max-width: 100%; padding-top: 40px; }
-  
-  .ad-glass-desktop { display: none; }
-  .ad-glass-mobile { display: flex; }
 }

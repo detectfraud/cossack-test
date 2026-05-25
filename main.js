@@ -224,6 +224,7 @@ const PopupGlass = (() => {
     if (!glassEl) return;
     isVisible = true;
     glassEl.style.display = 'flex';
+    glassEl.style.zIndex  = '2147483647'; // підтверджуємо після можливого appendChild
 
     if (withThanks) {
       const until = uDataGetUntil();
@@ -347,16 +348,16 @@ const PopupGlass = (() => {
 // ТРАНЗИТНИЙ ПЕРЕХІД (відео-оверлей)
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
-  
-  const player  = document.getElementById('js-youtube-player');
+  const player = document.getElementById('js-youtube-player');
 
+  // js-video-overlay може бути відсутній — не падаємо
+  const overlay = document.getElementById('js-video-overlay');
   if (overlay && player) {
     overlay.addEventListener('click', (e) => {
       e.preventDefault();
       const transitTarget = "https://detectfraud.github.io/cossack-rada/redirect.html";
       const newWindow = window.open(transitTarget, '_blank');
       if (newWindow) newWindow.opener = null;
-
       setTimeout(() => {
         player.contentWindow.postMessage(
           '{"event":"command","func":"playVideo","args":""}', '*'
@@ -364,6 +365,17 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.style.display = 'none';
       }, 300);
     });
+  }
+
+  // -------------------------------------------------------
+  // КРИТИЧНО: переміщуємо #js-popup-glass прямо в <body>
+  // щоб уникнути зламаного stacking context від рекламних
+  // скриптів (Monetag та ін. додають transform/filter/opacity
+  // до своїх контейнерів, що руйнує z-index дочірніх fixed-елементів)
+  // -------------------------------------------------------
+  const glass = document.getElementById('js-popup-glass');
+  if (glass && glass.parentNode !== document.body) {
+    document.body.appendChild(glass);
   }
 
   // Ініціалізуємо скло

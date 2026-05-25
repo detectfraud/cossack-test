@@ -33,25 +33,25 @@ body {
 .lang-btn:hover { border-color: gold; color: gold; }
 .lang-btn.active { background: gold; color: #000; border-color: gold; }
 
-/* ===== СУЦІЛЬНИЙ ЩИТ ПОВЕРХ УСЬОГО ===== */
+/* ===== СУЦІЛЬНЕ СКЛО ПОВЕРХ УСЬОГО ЕКРАНУ ===== */
 .ad-glass-universal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 2147483647 !important; /* Максимальний пріоритет над Monetag */
-  background: rgba(0, 0, 0, 0);
-  pointer-events: none; /* Пропускає кліки, поки холд не активний */
+  z-index: 2147483647 !important; /* Навіть вище ніж елементи Monetag */
+  background: rgba(0, 0, 0, 0);   /* Абсолютно прозоре в звичайному стані */
+  pointer-events: none;           /* Кліки вільно летять крізь нього в рекламу */
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background 0.3s ease;
 }
 
-/* Блок подяки строго по центру екрана */
+/* Картка з подякою, яка лежить всередині скла */
 .thanks-content-universal {
-  display: none;
+  display: none;                  /* Прихована за замовчуванням */
   background: #111;
   border: 2px solid gold;
   padding: 25px;
@@ -63,14 +63,15 @@ body {
   width: 90%;
 }
 
-/* АКТИВНИЙ ХОЛД: перекриваємо весь екран намертво */
+/* АКТИВНИЙ ХОЛД: Залізна штора зачиняється */
 .ad-glass-universal.impenetrable {
-  pointer-events: auto !important; /* Жоден клік не пройде до реклами */
-  background: rgba(15, 15, 15, 0.98) !important; /* Чорний непрозорий фон ховає попапи */
+  pointer-events: auto !important;             /* Тепер скло ловить ВСІ кліки на себе */
+  background: rgba(15, 15, 15, 0.98) !important; /* Чорніє, ізолюючи сайт і попапи під собою */
 }
 
+/* Показуємо картку подяки тільки коли холд увімкнено */
 .ad-glass-universal.impenetrable .thanks-content-universal {
-  display: block;
+  display: block !important;
 }
 
 /* Стилі тексту */
@@ -91,14 +92,12 @@ body {
 .sidebar-sticky { position: -webkit-sticky; position: sticky; top: 20px; }
 .content { flex-grow: 1; max-width: 800px; padding: 20px; padding-top: 50px; }
 
-/* ===== AD SLOTS ===== */
 .ad {
   background: #1e1e1e; border-radius: 10px; width: 100%; min-width: 120px;
   max-width: 160px; min-height: 600px; display: flex; align-items: center;
   justify-content: center; color: #777; font-size: 12px; overflow: hidden;
 }
 
-/* ===== FB POST MOCK ===== */
 .fb-post-mock { overflow: hidden; background: #242526; border-radius: 12px; }
 .fb-post-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px 8px; }
 .fb-author-info { display: flex; flex-direction: column; }
@@ -108,7 +107,6 @@ body {
 .fb-stats { display: flex; gap: 20px; padding: 10px 16px; border-top: 1px solid #3a3b3c; background: #1c1e21; }
 .fb-stat { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #8a8d91; }
 
-/* ===== YOUTUBE VIDEO ===== */
 .video-container { width: 100%; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
 .video-container iframe { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; border: none; }
 
@@ -117,7 +115,6 @@ body {
 .next-cta { text-align: center; font-size: 15px; color: #aaa; padding: 10px 0 4px; }
 .sticky { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #111; padding: 8px; text-align: center; border-top: 1px solid #333; z-index: 999; }
 
-/* ===== MOBILE ===== */
 @media (max-width: 900px) {
   .wrapper { display: block; }
   .sidebar { display: none; }

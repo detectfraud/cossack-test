@@ -9,29 +9,36 @@
 </head>
 <body>
 
-<div id="js-video-overlay">
-  <div id="js-thanks-overlay" style="display: none;">
-    <div class="thanks-content">
-      <h4>Дякуємо за допомогу! ❤️</h4>
-      <p>Ти успішно підтримав козацький серіал рекламним переглядом.</p>
-      <div class="thanks-time-box">
-        <span>Запрошуємо на наступну серію завтра о:</span>
-        <span id="js-tomorrow-time-thanks">00:00</span>
-      </div>
-    </div>
-  </div>
-</div>
-
+<!-- Мовні кнопки перенесені ВЛІВО -->
 <div class="lang-switcher">
   <button class="lang-btn active" id="btn-uk">UA</button>
   <button class="lang-btn"        id="btn-en">EN</button>
+</div>
+
+<!-- "Скло" (glass overlay) поверх двох рекламних попапів -->
+<div id="js-popup-glass" class="popup-glass" style="display:none;">
+  <div class="popup-glass-inner">
+    <div id="js-popup-glass-thanks" class="popup-glass-thanks" style="display:none;">
+      <h4>Дякуємо за допомогу! ❤️</h4>
+      <p>Ти успішно підтримав козацький серіал рекламним переглядом.</p>
+      <div class="popup-glass-time">
+        <span>Запрошуємо о</span>
+        <strong id="js-popup-invite-time">00:00</strong>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="wrapper">
 
   <div class="sidebar">
     <div class="sidebar-sticky">
-      <div class="ad" id="ad-left"></div>
+      <div class="ad" id="ad-left">
+        <!-- Рекламний попап 1 -->
+        <div class="popup-wrap" id="popup-wrap-1">
+          <div class="popup-slot" id="popup-slot-1"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -54,8 +61,20 @@
           </div>
         </div>
         <p class="fb-post-text" id="js-post-text"></p>
-        
+
         <div class="video-container" style="position: relative;">
+          <!-- Оверлей подяки на відеоплеєрі залишається для сумісності -->
+          <div id="js-thanks-overlay" style="display: none; position: absolute; inset: 0; z-index: 11; background: rgba(15, 15, 15, 0.95); align-items: center; justify-content: center; padding: 20px; text-align: center; border: 2px solid gold; border-radius: inherit;">
+            <div style="color: #fff; font-family: sans-serif;">
+              <h4 style="color: gold; margin: 0 0 10px 0; font-size: 18px;">Дякуємо за допомогу! ❤️</h4>
+              <p style="font-size: 13px; margin: 0 0 15px 0; color: #ccc; line-height: 1.5;">Ти успішно підтримав козацький серіал рекламним переглядом.</p>
+              <div style="background: #222; padding: 8px 15px; border-radius: 6px; display: inline-block; border: 1px solid #444;">
+                <span style="font-size: 11px; color: #888; display: block;">Запрошуємо на наступну серію завтра о:</span>
+                <span id="js-tomorrow-time-thanks" style="font-size: 18px; font-weight: bold; color: gold;">00:00</span>
+              </div>
+            </div>
+          </div>
+
           <iframe
             id="js-youtube-player"
             src="https://www.youtube.com/embed/iIcqtIL6XqU?rel=0&modestbranding=1&showinfo=0&enablejsapi=1"
@@ -100,15 +119,27 @@
 
   <div class="sidebar">
     <div class="sidebar-sticky">
-      <div class="ad" id="ad-right"></div>
+      <div class="ad" id="ad-right">
+        <!-- Рекламний попап 2 -->
+        <div class="popup-wrap" id="popup-wrap-2">
+          <div class="popup-slot" id="popup-slot-2"></div>
+        </div>
+      </div>
     </div>
   </div>
 
 </div>
 
+<!-- Мобільна назва ленду під "склом" (тільки mobile) -->
+<div class="mobile-title-under-glass" id="js-mobile-title-under-glass" style="display:none;">
+  <span id="js-mobile-title-text"></span>
+</div>
+
 <div class="sticky" id="js-sticky"></div>
 
 <script>(function(s){s.dataset.zone='11040513',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+
 <script src="main.js"></script>
+
 </body>
 </html>

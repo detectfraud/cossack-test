@@ -99,12 +99,12 @@ body {
   position: fixed;
   top: 16px;
   right: 8px;
-  width: 204px;          /* ~ширина рекламного блоку зі скріншота */
-  z-index: 2147483647;   /* MAX int32 — вище за будь-який рекламний попап */
-  display: none;         /* керується через JS */
+  width: 204px;
+  /* z-index і display задані inline в HTML — не перевизначаємо тут */
   flex-direction: column;
   gap: 6px;
-  pointer-events: none;  /* за замовчуванням прозоре для кліків */
+  pointer-events: none;
+  isolation: isolate;    /* власний stacking context, незалежний від батьків */
 }
 
 /* Режим блокування кліків (після 24год) */

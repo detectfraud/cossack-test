@@ -10,11 +10,11 @@ body {
   color: #fff;
 }
 
-/* ===== LANG SWITCHER (Збережено стилі, перенесено на ліву сторону) ===== */
+/* ===== LANG SWITCHER ===== */
 .lang-switcher {
   position: fixed;
   top: 12px;
-  left: 16px; /* Змінено з right на left */
+  left: 16px;
   z-index: 1000;
   display: flex;
   gap: 6px;
@@ -33,40 +33,84 @@ body {
 .lang-btn:hover { border-color: gold; color: gold; }
 .lang-btn.active { background: gold; color: #000; border-color: gold; }
 
-/* ===== АДАПТИВНІ СКЛА-ЩИТИ ДЛЯ ПЕРЕХОПЛЕННЯ КЛІКІВ REKLAMA ===== */
-/* Настільне скло: повністю покриває правий сайдбар, де з’являються банери */
+/* ===== РОЗУМНА СИСТЕМА СКЛА-ЩИТІВ ===== */
+/* Настільна зона (правий сайдбар) */
 .ad-glass-desktop {
   position: fixed;
   top: 0;
   right: 0;
-  width: calc((100vw - 800px) / 2); /* Динамічно закриває всю праву зону від контенту */
+  width: calc((100vw - 800px) / 2);
   min-width: 180px;
   height: 100vh;
-  background: rgba(0, 0, 0, 0); /* Скло повністю прозоре */
-  z-index: 999995;
-  cursor: pointer;
-  display: block;
+  z-index: 999999;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none; /* Кліки вільно летять у попапи під склом */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
 }
 
-/* Мобільне скло: покриває верхні 155px екрана, де Monetag малює два пуші (як на скріншоті) */
+/* Мобільна зона (верхні 155px під два пуші) */
 .ad-glass-mobile {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
-  height: 155px; /* Висота підібрана під два верхні попапи */
+  height: 155px;
+  z-index: 999999;
   background: rgba(0, 0, 0, 0);
-  z-index: 999996;
-  cursor: pointer;
-  display: none; /* Активується тільки на мобільних пристроях */
+  pointer-events: none;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
 }
 
-/* Коли скло стає непроникним після зарахування донату (режим захисту сайту) */
+/* Вміст блоку подяки (ховається за замовчуванням) */
+.ad-glass-desktop .thanks-content,
+.ad-glass-mobile .thanks-content-mobile {
+  display: none;
+  background: #111;
+  border: 2px solid gold;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-family: sans-serif;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.ad-glass-desktop .thanks-content { width: 90%; }
+.ad-glass-mobile .thanks-content-mobile {
+  width: 95%;
+  padding: 8px;
+  font-size: 12px;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  gap: 5px;
+}
+
+/* СТАН АКТИВНОГО ХОЛДУ: Скло закривається намертво і показує подяку */
 .ad-glass-desktop.impenetrable,
 .ad-glass-mobile.impenetrable {
-  cursor: not-allowed !important;
-  pointer-events: auto !important; /* Утримує повне перехоплення, але кліки ігноруються в JS */
+  pointer-events: auto !important; /* Тепер кліки повністю заблоковані */
+  background: rgba(15, 15, 15, 0.96) !important; /* Чорніє, ховаючи під собою банери */
 }
+
+.ad-glass-desktop.impenetrable .thanks-content {
+  display: block;
+}
+.ad-glass-mobile.impenetrable .thanks-content-mobile {
+  display: flex;
+}
+
+/* Стилі тексту всередині скла */
+.thanks-content h4 { color: gold; margin: 0 0 5px 0; font-size: 16px; }
+.thanks-content p { color: #ccc; margin: 0 0 10px 0; font-size: 13px; }
+.time-block { background: #222; padding: 6px; border-radius: 4px; border: 1px solid #333; }
+.time-block span { display: block; font-size: 11px; color: #888; }
+.class-time { font-size: 16px; font-weight: bold; color: gold !important; }
 
 /* ===== LAYOUT ===== */
 .wrapper {
@@ -75,142 +119,42 @@ body {
   display: flex;
   justify-content: center;
 }
-
-.sidebar {
-  width: 180px; 
-  padding: 10px;
-  flex-shrink: 0;
-}
-
-.sidebar-sticky {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 20px;
-}
-
-.content {
-  flex-grow: 1;
-  max-width: 800px;
-  padding: 20px;
-  padding-top: 50px;
-}
+.sidebar { width: 180px; padding: 10px; flex-shrink: 0; }
+.sidebar-sticky { position: -webkit-sticky; position: sticky; top: 20px; }
+.content { flex-grow: 1; max-width: 800px; padding: 20px; padding-top: 50px; }
 
 /* ===== AD SLOTS ===== */
 .ad {
-  background: #1e1e1e;
-  border-radius: 10px;
-  width: 100%;
-  min-width: 120px;
-  max-width: 160px;
-  min-height: 600px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #777;
-  font-size: 12px;
-  overflow: hidden;
-}
-
-/* ===== ADBLOCK MESSAGE ===== */
-.adblock-msg {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 12px;
-  text-align: center;
-  width: 100%;
-}
-.adblock-msg p { margin: 0; font-size: 11px; line-height: 1.5; color: #aaa; }
-.adblock-msg strong { color: gold; }
-.adblock-msg--sticky { font-size: 13px; color: #ccc; padding: 6px; }
-
-/* ===== TYPOGRAPHY ===== */
-h1 { text-align: center; color: gold; }
-
-.card {
-  background: #1b1b1b;
-  padding: 15px;
-  margin: 15px 0;
-  border-radius: 12px;
+  background: #1e1e1e; border-radius: 10px; width: 100%; min-width: 120px;
+  max-width: 160px; min-height: 600px; display: flex; align-items: center;
+  justify-content: center; color: #777; font-size: 12px; overflow: hidden;
 }
 
 /* ===== FB POST MOCK ===== */
-.fb-post-mock {
-  overflow: hidden;
-  background: #242526;
-  border-radius: 12px;
-}
-.fb-post-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px 8px;
-}
+.fb-post-mock { overflow: hidden; background: #242526; border-radius: 12px; }
+.fb-post-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px 8px; }
 .fb-author-info { display: flex; flex-direction: column; }
 .fb-author-name { font-size: 14px; font-weight: 600; color: #e4e6eb; text-decoration: none; }
-.fb-author-name:hover { text-decoration: underline; }
 .fb-post-date { font-size: 12px; color: #8a8d91; margin-top: 1px; }
-.fb-post-text {
-  font-size: 14px; line-height: 1.6; color: #e4e6eb;
-  padding: 0 16px 12px; margin: 0; white-space: pre-line;
-}
-.fb-stats {
-  display: flex; gap: 20px;
-  padding: 10px 16px;
-  border-top: 1px solid #3a3b3c;
-  background: #1c1e21;
-}
+.fb-post-text { font-size: 14px; line-height: 1.6; color: #e4e6eb; padding: 0 16px 12px; margin: 0; white-space: pre-line; }
+.fb-stats { display: flex; gap: 20px; padding: 10px 16px; border-top: 1px solid #3a3b3c; background: #1c1e21; }
 .fb-stat { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #8a8d91; }
 
 /* ===== YOUTUBE VIDEO ===== */
-.video-container { 
-  width: 100%; 
-  position: relative;
-  padding-bottom: 56.25%;
-  height: 0;
-  overflow: hidden; 
-}
-.video-container iframe { 
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100% !important; 
-  height: 100% !important; 
-  border: none; 
-}
+.video-container { width: 100%; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+.video-container iframe { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; border: none; }
 
-/* ===== DONATE BUTTON ===== */
-.btn {
-  display: block; text-align: center;
-  padding: 14px; background: gold;
-  color: black; font-weight: bold;
-  border-radius: 10px; text-decoration: none;
-}
-
-/* ===== NEXT CTA ===== */
+.btn { display: block; text-align: center; padding: 14px; background: gold; color: black; font-weight: bold; border-radius: 10px; text-decoration: none; }
+.card { background: #1b1b1b; padding: 15px; margin: 15px 0; border-radius: 12px; }
 .next-cta { text-align: center; font-size: 15px; color: #aaa; padding: 10px 0 4px; }
+.sticky { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #111; padding: 8px; text-align: center; border-top: 1px solid #333; z-index: 999; }
 
-/* ===== STICKY BOTTOM ===== */
-.sticky {
-  display: none;
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  background: #111;
-  padding: 8px;
-  text-align: center;
-  border-top: 1px solid #333;
-  z-index: 999;
-}
-
-/* ===== MOBILE ADAPTATION ===== */
+/* ===== MOBILE ===== */
 @media (max-width: 900px) {
   .wrapper { display: block; }
   .sidebar { display: none; }
   .content { margin: 0; max-width: 100%; padding-top: 40px; }
-  .sticky  { display: none !important; }
   
-  /* Перемикаємо активність стекол під мобільний екран */
   .ad-glass-desktop { display: none; }
-  .ad-glass-mobile { display: block; }
+  .ad-glass-mobile { display: flex; }
 }

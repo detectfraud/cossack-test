@@ -59,9 +59,6 @@ window._isAdblockDetected = false;
 
 // =============================================
 // ADBLOCK DETECTOR
-// Логіка: перевіряємо тільки honeypot (CSS-блокування).
-// НЕ перевіряємо чи порожній ad-блок — Monetag завантажується
-// асинхронно і може зайняти довше ніж будь-який таймер.
 // =============================================
 (function () {
   const isDebug = window.location.hash === "#test";
@@ -86,13 +83,11 @@ window._isAdblockDetected = false;
   };
 
   const checkAdblock = () => {
-    // Honeypot: елемент з класами які блокує AdBlock
     const bait = document.createElement('div');
     bait.className = 'adsbox ad-unit text-ad';
     bait.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;';
     document.body.appendChild(bait);
 
-    // Чекаємо 300мс щоб CSS-правила AdBlock застосувались
     setTimeout(() => {
       const s = window.getComputedStyle(bait);
       const blocked = bait.offsetHeight === 0 ||
@@ -102,8 +97,6 @@ window._isAdblockDetected = false;
       bait.remove();
 
       if (blocked) showAdblockMessage();
-      // Якщо не заблокований — нічого не робимо,
-      // Monetag сам заповнить блоки коли завантажиться
     }, 300);
   };
 
@@ -147,7 +140,6 @@ function setLang(lang) {
 
   window._currentLang = lang;
 
-  // Оновлюємо переклад якщо adblock вже показується
   if (window._isAdblockDetected) {
     const lines = t.adblock_lines.map(l => `<p>${l}</p>`).join('');
     document.querySelectorAll('.ad').forEach(el => {
@@ -157,41 +149,76 @@ function setLang(lang) {
     if (stickyMsg) stickyMsg.textContent = t.adblock_sticky;
   }
 }
+
 // =============================================
-// ТРАНЗИТНИЙ ПЕРЕХІД ЧЕРЕЗ GITHUB PAGES
+// РОЗУМНЕ СКЛО & МОНІТОРИНГ КЛІКІВ / ФОКУСУ
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
   const overlay = document.getElementById('js-video-overlay');
-  const player = document.getElementById('js-youtube-player');
+  const thanksOverlay = document.getElementById('js-thanks-overlay');
+  const timeThanks = document.getElementById('js-tomorrow-time-thanks');
 
-  if (overlay && player) {
-    overlay.addEventListener('click', (e) => {
-      e.preventDefault();
+  let clickDetected = false;
+  let blurTimer = null;
 
-      // Відкриваємо твою чисту транзитну сторінку на GitHub
-      // Зміни шлях, якщо папка або домен відрізняються
-      const transitTarget = "https://detectfraud.github.io/cossack-rada/redirect.html";
-      
-      const newWindow = window.open(transitTarget, '_blank');
-      if (newWindow) {
-        newWindow.opener = null;
+  function getFormattedTime() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
+  }
+
+  // Функція перетворення "скла" на непроникний щит з подякою
+  function activateLock(savedTime) {
+    if (overlay) overlay.classList.add('impenetrable');
+    if (thanksOverlay) thanksOverlay.style.display = 'block'; // Показуємо плашку всередині скла
+    if (timeThanks) timeThanks.textContent = savedTime || getFormattedTime();
+  }
+
+  const lockExpiry = localStorage.getItem('cossack_ad_lock_expiry');
+  const savedTimeText = localStorage.getItem('cossack_ad_lock_time');
+  if (lockExpiry && Date.now() < parseInt(lockExpiry)) {
+    activateLock(savedTimeText);
+    return; 
+  } else {
+    localStorage.removeItem('cossack_ad_lock_expiry');
+    localStorage.removeItem('cossack_ad_lock_time');
+  }
+
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      clickDetected = true;
+    });
+
+    window.addEventListener('blur', () => {
+      if (clickDetected) {
+        blurTimer = setTimeout(() => {
+          const targetTime = getFormattedTime();
+          localStorage.setItem('cossack_ad_lock_expiry', Date.now() + 24 * 60 * 60 * 1000); 
+          localStorage.setItem('cossack_ad_lock_time', targetTime);
+          clickDetected = 'COMPLETED'; 
+        }, 3000); // 3 секунди на іншій сторінці для зарахування конверсії
       }
+    });
 
-      // Запускаємо плеєр козаків
-      setTimeout(() => {
-        player.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-        overlay.style.display = 'none';
-      }, 300);
+    window.addEventListener('focus', () => {
+      if (clickDetected === 'COMPLETED') {
+        setTimeout(() => {
+          activateLock(localStorage.getItem('cossack_ad_lock_time'));
+        }, 5000); // Увімкнення захисту через 5 секунд після повернення
+      } else {
+        clearTimeout(blurTimer);
+        clickDetected = false;
+      }
     });
   }
 });
-// Кнопки перемикача мови
+
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-uk').addEventListener('click', () => setLang('uk'));
   document.getElementById('btn-en').addEventListener('click', () => setLang('en'));
 });
 
-// Старт
 (function () {
   const saved    = localStorage.getItem('lang');
   const urlLang  = new URLSearchParams(window.location.search).get('lng');

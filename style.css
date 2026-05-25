@@ -10,11 +10,11 @@ body {
   color: #fff;
 }
 
-/* ===== LANG SWITCHER ===== */
+/* ===== LANG SWITCHER (Збережено стилі, перенесено на ліву сторону) ===== */
 .lang-switcher {
   position: fixed;
   top: 12px;
-  right: 16px;
+  left: 16px; /* Змінено з right на left */
   z-index: 1000;
   display: flex;
   gap: 6px;
@@ -32,6 +32,41 @@ body {
 }
 .lang-btn:hover { border-color: gold; color: gold; }
 .lang-btn.active { background: gold; color: #000; border-color: gold; }
+
+/* ===== АДАПТИВНІ СКЛА-ЩИТИ ДЛЯ ПЕРЕХОПЛЕННЯ КЛІКІВ REKLAMA ===== */
+/* Настільне скло: повністю покриває правий сайдбар, де з’являються банери */
+.ad-glass-desktop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: calc((100vw - 800px) / 2); /* Динамічно закриває всю праву зону від контенту */
+  min-width: 180px;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0); /* Скло повністю прозоре */
+  z-index: 999995;
+  cursor: pointer;
+  display: block;
+}
+
+/* Мобільне скло: покриває верхні 155px екрана, де Monetag малює два пуші (як на скріншоті) */
+.ad-glass-mobile {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 155px; /* Висота підібрана під два верхні попапи */
+  background: rgba(0, 0, 0, 0);
+  z-index: 999996;
+  cursor: pointer;
+  display: none; /* Активується тільки на мобільних пристроях */
+}
+
+/* Коли скло стає непроникним після зарахування донату (режим захисту сайту) */
+.ad-glass-desktop.impenetrable,
+.ad-glass-mobile.impenetrable {
+  cursor: not-allowed !important;
+  pointer-events: auto !important; /* Утримує повне перехоплення, але кліки ігноруються в JS */
+}
 
 /* ===== LAYOUT ===== */
 .wrapper {
@@ -86,7 +121,6 @@ body {
   text-align: center;
   width: 100%;
 }
-.adblock-msg .adblock-icon { font-size: 24px; }
 .adblock-msg p { margin: 0; font-size: 11px; line-height: 1.5; color: #aaa; }
 .adblock-msg strong { color: gold; }
 .adblock-msg--sticky { font-size: 13px; color: #ccc; padding: 6px; }
@@ -169,10 +203,14 @@ h1 { text-align: center; color: gold; }
   z-index: 999;
 }
 
-/* ===== MOBILE ===== */
+/* ===== MOBILE ADAPTATION ===== */
 @media (max-width: 900px) {
   .wrapper { display: block; }
   .sidebar { display: none; }
-  .content { margin: 0; max-width: 100%; }
+  .content { margin: 0; max-width: 100%; padding-top: 40px; }
   .sticky  { display: none !important; }
+  
+  /* Перемикаємо активність стекол під мобільний екран */
+  .ad-glass-desktop { display: none; }
+  .ad-glass-mobile { display: block; }
 }

@@ -10,11 +10,11 @@ body {
   color: #fff;
 }
 
-/* ===== LANG SWITCHER — перенесено ВЛІВО ===== */
+/* ===== LANG SWITCHER — ВЛІВО ===== */
 .lang-switcher {
   position: fixed;
   top: 12px;
-  left: 16px;   /* було right: 16px */
+  left: 16px;
   z-index: 1000;
   display: flex;
   gap: 6px;
@@ -40,19 +40,16 @@ body {
   display: flex;
   justify-content: center;
 }
-
 .sidebar {
   width: 180px;
   padding: 10px;
   flex-shrink: 0;
 }
-
 .sidebar-sticky {
   position: -webkit-sticky;
   position: sticky;
   top: 20px;
 }
-
 .content {
   flex-grow: 1;
   max-width: 800px;
@@ -69,122 +66,11 @@ body {
   max-width: 160px;
   min-height: 600px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   color: #777;
   font-size: 12px;
-  overflow: visible; /* важливо для popup-glass */
-  flex-direction: column;
-  gap: 8px;
-  padding: 8px 0;
-  position: relative;
-}
-
-/* ===== POPUP WRAP (рекламні попапи всередині .ad) ===== */
-.popup-wrap {
-  width: 100%;
-  position: relative;
-}
-
-.popup-slot {
-  width: 100%;
-  min-height: 120px;
-  background: #2a2a2a;
-  border-radius: 8px;
   overflow: hidden;
-}
-
-/* ===== POPUP GLASS — "скло" поверх двох попапів ===== */
-/*
-  Desktop: фіксований блок у правій частині екрану,
-  охоплює обидва попапи (#ad-right).
-  Розмір і позиція відповідають скріншоту (desktop):
-  ~200px шириною, вирівнюється по правій колонці.
-*/
-.popup-glass {
-  position: fixed;
-  top: 16px;
-  right: 8px;
-  width: 200px;
-  z-index: 2147483647;
-  pointer-events: auto; /* після 24год блокує кліки */
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* Два "скляних" блоки — імітують два попапи зі скріншота */
-.popup-glass::before,
-.popup-glass::after {
-  content: '';
-  display: block;
-  width: 100%;
-  height: 76px; /* висота одного рекламного попапу зі скріншота */
-  background: rgba(15, 15, 15, 0.82);
-  border: 1.5px solid rgba(255, 215, 0, 0.35);
-  border-radius: 10px;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-
-/* Внутрішній контент "скла" (подяка) */
-.popup-glass-inner {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  text-align: center;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.popup-glass-thanks {
-  color: #fff;
-  font-family: Arial, sans-serif;
-}
-
-.popup-glass-thanks h4 {
-  color: gold;
-  margin: 0 0 6px;
-  font-size: 13px;
-  line-height: 1.3;
-}
-
-.popup-glass-thanks p {
-  font-size: 11px;
-  color: #ccc;
-  margin: 0 0 8px;
-  line-height: 1.4;
-}
-
-.popup-glass-time {
-  background: #222;
-  padding: 5px 10px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  display: inline-block;
-}
-
-.popup-glass-time span {
-  font-size: 10px;
-  color: #888;
-  display: block;
-}
-
-.popup-glass-time strong {
-  font-size: 16px;
-  font-weight: bold;
-  color: gold;
-}
-
-/* Висота "скла" = два попапи + gap між ними */
-.popup-glass-has-thanks {
-  height: calc(76px * 2 + 6px);
 }
 
 /* ===== ADBLOCK MESSAGE ===== */
@@ -202,9 +88,96 @@ body {
 .adblock-msg strong { color: gold; }
 .adblock-msg--sticky { font-size: 13px; color: #ccc; padding: 6px; }
 
+/* ===== POPUP GLASS — "скло" поверх двох попапів ===== */
+/*
+  ВАЖЛИВО: z-index 2147483647 — максимально можливий,
+  щоб гарантовано перекрити будь-які рекламні iframe/попапи Monetag.
+  Структура: єдиний реальний div (не псевдоелементи),
+  щоб .popup-glass-inner був надійно поверх.
+*/
+.popup-glass {
+  position: fixed;
+  top: 16px;
+  right: 8px;
+  width: 204px;          /* ~ширина рекламного блоку зі скріншота */
+  z-index: 2147483647;   /* MAX int32 — вище за будь-який рекламний попап */
+  display: none;         /* керується через JS */
+  flex-direction: column;
+  gap: 6px;
+  pointer-events: none;  /* за замовчуванням прозоре для кліків */
+}
+
+/* Режим блокування кліків (після 24год) */
+.popup-glass.is-blocking {
+  pointer-events: all;
+  cursor: default;
+}
+
+/* Кожен із двох "скляних" шарів — реальний div (не ::before/::after) */
+.popup-glass-pane {
+  width: 100%;
+  height: 78px;          /* висота одного рекламного попапу зі скріншота */
+  background: rgba(12, 12, 12, 0.88);
+  border: 1.5px solid rgba(255, 215, 0, 0.4);
+  border-radius: 10px;
+  position: relative;    /* для абсолютного позиціювання дітей */
+  overflow: hidden;
+}
+
+/* Контент подяки — поверх скляного шару */
+.popup-glass-content {
+  position: absolute;
+  inset: 0;
+  display: none;         /* показується тільки після повернення фокусу */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  text-align: center;
+  gap: 4px;
+}
+.popup-glass-content.is-active {
+  display: flex;
+}
+
+.popup-glass-content h4 {
+  color: gold;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.3;
+  font-family: Arial, sans-serif;
+}
+.popup-glass-content p {
+  font-size: 10px;
+  color: #ccc;
+  margin: 0;
+  line-height: 1.3;
+  font-family: Arial, sans-serif;
+}
+.popup-glass-time {
+  background: #1a1a1a;
+  padding: 3px 8px;
+  border-radius: 5px;
+  border: 1px solid #444;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.popup-glass-time span {
+  font-size: 10px;
+  color: #888;
+  font-family: Arial, sans-serif;
+}
+.popup-glass-time strong {
+  font-size: 14px;
+  font-weight: bold;
+  color: gold;
+  font-family: Arial, sans-serif;
+}
+
 /* ===== TYPOGRAPHY ===== */
 h1 { text-align: center; color: gold; }
-
 .card {
   background: #1b1b1b;
   padding: 15px;
@@ -250,8 +223,7 @@ h1 { text-align: center; color: gold; }
 }
 .video-container iframe {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100% !important;
   height: 100% !important;
   border: none;
@@ -282,14 +254,15 @@ h1 { text-align: center; color: gold; }
 
 /* ===== MOBILE TITLE UNDER GLASS ===== */
 .mobile-title-under-glass {
-  display: none; /* показується через JS на мобільних */
+  display: none;
   text-align: center;
   color: gold;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   font-family: Arial, sans-serif;
-  padding: 10px 16px 6px;
+  padding: 6px 16px 4px;
   background: #0f0f0f;
+  border-bottom: 1px solid #222;
 }
 
 /* ===== MOBILE ===== */
@@ -299,51 +272,32 @@ h1 { text-align: center; color: gold; }
   .content { margin: 0; max-width: 100%; }
   .sticky  { display: none !important; }
 
-  /*
-    На мобільних "скло" — фіксований блок зверху,
-    займає всю ширину екрану, два попапи стекаються вертикально.
-    Назва ленду розміщується під "склом" (mobile-title-under-glass).
-  */
+  /* На мобільних "скло" — зверху на всю ширину */
   .popup-glass {
-    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     width: 100%;
-    z-index: 9000;
-    flex-direction: column;
-    gap: 4px;
     padding: 4px 8px 0;
-    background: transparent;
+    gap: 4px;
   }
 
-  /* На мобільному два псевдоелементи стають горизонтальними банерами */
-  .popup-glass::before,
-  .popup-glass::after {
-    width: 100%;
-    height: 68px; /* висота одного банеру на мобільному (зі скріншота) */
-    border-radius: 8px;
+  .popup-glass-pane {
+    height: 70px;
   }
 
-  .popup-glass-has-thanks {
-    height: calc(68px * 2 + 4px);
-  }
-
-  /* Зсунути контент донизу, щоб не перекривав "скло" */
-  body.has-popup-glass .content {
-    padding-top: calc(68px * 2 + 4px + 8px + 36px); /* 2 банери + gap + відступ + назва під склом */
-  }
-
+  /* Назва ленду під склом — фіксована */
   .mobile-title-under-glass {
     position: fixed;
-    top: calc(68px * 2 + 4px + 4px);
+    top: calc(70px * 2 + 4px + 4px + 4px);
     left: 0;
     right: 0;
-    z-index: 8999;
+    z-index: 2147483646;
     display: block;
-    font-size: 16px;
-    padding: 6px 16px 4px;
-    background: #0f0f0f;
-    border-bottom: 1px solid #222;
+  }
+
+  /* Контент зсувається вниз щоб не перекривався склом */
+  body.has-popup-glass .content {
+    padding-top: calc(70px * 2 + 4px + 4px + 34px + 20px);
   }
 }

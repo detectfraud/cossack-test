@@ -14,9 +14,24 @@
   <button class="lang-btn"        id="btn-en">EN</button>
 </div>
 
-<div id="js-glass-desktop" class="ad-glass-desktop"></div>
+<div id="js-glass-desktop" class="ad-glass-desktop">
+  <div class="thanks-content">
+    <h4 class="js-thanks-title">Дякуємо! ❤️</h4>
+    <p class="js-thanks-desc">Рекламний донат зараховано.</p>
+    <div class="time-block">
+      <span class="js-thanks-invite">Запрошуємо завтра о:</span>
+      <span class="js-tomorrow-time-thanks class-time">00:00</span>
+    </div>
+  </div>
+</div>
 
-<div id="js-glass-mobile" class="ad-glass-mobile"></div>
+<div id="js-glass-mobile" class="ad-glass-mobile">
+  <div class="thanks-content-mobile">
+    <span class="js-thanks-title">Дякуємо! ❤️</span> 
+    <span class="js-thanks-invite">Наступна серія завтра о:</span>
+    <span class="js-tomorrow-time-thanks class-time">00:00</span>
+  </div>
+</div>
 
 <div class="wrapper">
 
@@ -46,18 +61,7 @@
         </div>
         <p class="fb-post-text" id="js-post-text"></p>
         
-        <div class="video-container" style="position: relative;">
-          <div id="js-thanks-overlay" style="display: none; position: absolute; inset: 0; z-index: 11; background: rgba(15, 15, 15, 0.95); align-items: center; justify-content: center; padding: 20px; text-align: center; border: 2px solid gold; border-radius: inherit;">
-            <div style="color: #fff; font-family: sans-serif;">
-              <h4 id="js-thanks-title" style="color: gold; margin: 0 0 10px 0; font-size: 18px;">Дякуємо за допомогу! ❤️</h4>
-              <p id="js-thanks-desc" style="font-size: 13px; margin: 0 0 15px 0; color: #ccc; line-height: 1.5;">Ти успішно підтримав козацький серіал рекламним переглядом.</p>
-              <div style="background: #222; padding: 8px 15px; border-radius: 6px; display: inline-block; border: 1px solid #444;">
-                <span id="js-thanks-invite" style="font-size: 11px; color: #888; display: block;">Запрошуємо на наступну серію завтра о:</span>
-                <span id="js-tomorrow-time-thanks" style="font-size: 18px; font-weight: bold; color: gold;">00:00</span>
-              </div>
-            </div>
-          </div>
-
+        <div class="video-container">
           <iframe
             id="js-youtube-player"
             src="https://www.youtube.com/embed/iIcqtIL6XqU?rel=0&modestbranding=1&showinfo=0&enablejsapi=1"

@@ -347,7 +347,7 @@ const PopupGlass = (() => {
 // ТРАНЗИТНИЙ ПЕРЕХІД (відео-оверлей)
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
-  const overlay = document.getElementById('js-video-overlay');
+  
   const player  = document.getElementById('js-youtube-player');
 
   if (overlay && player) {

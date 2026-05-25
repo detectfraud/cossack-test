@@ -106,7 +106,7 @@ body {
   top: 16px;
   right: 8px;
   width: 200px;
-  z-index: 9000;
+  z-index: 2147483647;
   pointer-events: auto; /* після 24год блокує кліки */
   display: flex;
   flex-direction: column;

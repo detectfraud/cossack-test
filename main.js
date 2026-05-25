@@ -18,7 +18,7 @@ const I18N = {
     sub:            "Відео, яке зібрало мільйони переглядів в Facebook, стало початком серії мемів про козаків.",
     before_video:   "Перша серія, з якої все почалося 👇",
     donate_heading: "❤️ Підтримати серіал",
-    donate_text:    "Ми створюємо цей серіал власним коштом.\nAI-сервіси, генерація сцен, монтаж та створення нових серій потребують ресурсів.\nЯкщо тобі подобається цей проєкт — підтримай його развитие ❤️",
+    donate_text:    "Ми створюємо цей серіал власним коштом.\nAI-сервіси, генерація сцен, монтаж та створення нових серій потребують ресурсів.\nЯкщо тобі подобається цей проєкт — підтримай його розвиток ❤️",
     donate_btn:     "Підтримати серіал",
     ads_heading:    "📢 Монетизація",
     ads_text:       "Реклама допомагає випускати нові серії та підтримувати проєкт.\nДякуємо за підтримку ❤️",
@@ -138,23 +138,20 @@ function setLang(lang) {
 
   window._currentLang = lang;
 
-  // ПЕРЕВІРКА ХОЛДУ ТА СТАНУ СКЛА
+  // ПЕРЕВІРКА ХОЛДУ ТА СТАНУ СКЛА (Глобальне скло)
   const rawSavedTime = localStorage.getItem(keyTimeHash);
   const taskSavedTime = unmaskData(rawSavedTime);
   const now = new Date().getTime();
 
-  const glassDesktop = document.getElementById('js-glass-desktop');
-  const glassMobile = document.getElementById('js-glass-mobile');
+  const globalGlass = document.getElementById('js-global-glass');
 
   if (taskSavedTime && now < parseInt(taskSavedTime)) {
     const savedTimeString = unmaskData(localStorage.getItem(keyStringHash));
     document.querySelectorAll('.js-tomorrow-time-thanks').forEach(el => el.textContent = savedTimeString);
     
-    if (glassDesktop) glassDesktop.classList.add('impenetrable');
-    if (glassMobile) glassMobile.classList.add('impenetrable');
+    if (globalGlass) globalGlass.classList.add('impenetrable');
   } else {
-    if (glassDesktop) glassDesktop.classList.remove('impenetrable');
-    if (glassMobile) glassMobile.classList.remove('impenetrable');
+    if (globalGlass) globalGlass.classList.remove('impenetrable');
   }
 }
 
@@ -167,10 +164,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function lockSystemForDay() {
     const currentTime = new Date();
-    // Округляємо час повернення до найближчої повної години (+24 години наперед)
     const unlockTimeObj = new Date(currentTime.getTime() + (24 * 60 * 60 * 1000));
     
-    // Округлення хвилин: якщо більше 30 — додаємо годину, хвилини скидаємо в нуль
     if (unlockTimeObj.getMinutes() >= 30) {
       unlockTimeObj.setHours(unlockTimeObj.getHours() + 1);
     }
@@ -186,30 +181,12 @@ document.addEventListener('DOMContentLoaded', () => {
     setLang(window._currentLang || 'uk');
   }
 
-  // Примусова зачистка сторонніх фреймів та попапів від Monetag під час холду
-  function hardCleanAds() {
-    const rawSavedTime = localStorage.getItem(keyTimeHash);
-    const taskSavedTime = unmaskData(rawSavedTime);
-    const now = new Date().getTime();
-
-    // Якщо холд активний, жорстко видаляємо динамічні банери
-    if (taskSavedTime && now < parseInt(taskSavedTime)) {
-      document.querySelectorAll('iframe:not(#js-youtube-player), div[id*="zone"], div[class*="banner"], div[id*="inpage"]').forEach(el => {
-        el.remove();
-      });
-    }
-  }
-  // Перевіряємо та вичищаємо сміття кожні 500мс
-  setInterval(hardCleanAds, 500);
-
   // СЛУХАЄМО ВСІ КЛІКИ НА СТОРІНЦІ
   document.addEventListener('click', (e) => {
-    const glassDesktop = document.getElementById('js-glass-desktop');
-    const glassMobile = document.getElementById('js-glass-mobile');
+    const globalGlass = document.getElementById('js-global-glass');
 
-    // Якщо холд активний і користувач клацає по стеклах — блокуємо подію намертво
-    if ((glassDesktop && glassDesktop.classList.contains('impenetrable') && glassDesktop.contains(e.target)) ||
-        (glassMobile && glassMobile.classList.contains('impenetrable') && glassMobile.contains(e.target))) {
+    // Якщо холд активний і користувач клацає по склу — блокуємо подію намертво
+    if (globalGlass && globalGlass.classList.contains('impenetrable')) {
       e.stopPropagation();
       e.preventDefault();
       return;

@@ -5,55 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Козацький серіал</title>
   <link rel="stylesheet" href="style.css">
-  <meta name="monetag" content="576250b2e4efbf523b07b865bbe248b0">
 </head>
 <body>
 
-<!-- Мовні кнопки — ВЛІВО -->
 <div class="lang-switcher">
   <button class="lang-btn active" id="btn-uk">UA</button>
   <button class="lang-btn"        id="btn-en">EN</button>
-</div>
-
-<!--
-  POPUP GLASS — "скло" поверх двох рекламних попапів.
-  z-index: 2147483647 (MAX) — гарантовано поверх будь-яких рекламних iframe.
-  Два реальних div.popup-glass-pane (замість ::before/::after),
-  щоб .popup-glass-content надійно рендерився поверх.
--->
-<div id="js-popup-glass" class="popup-glass" style="display:none;position:fixed;z-index:2147483647;isolation:isolate;">
-
-  <!-- Скляний шар 1 (верхній попап) -->
-  <div class="popup-glass-pane">
-    <div class="popup-glass-content" id="js-glass-content-1">
-      <h4 id="js-glass-h4">Дякуємо за допомогу! ❤️</h4>
-      <p id="js-glass-p">Ти успішно підтримав козацький серіал рекламним переглядом.</p>
-      <div class="popup-glass-time">
-        <span id="js-glass-invite-label">Запрошуємо о</span>
-        <strong id="js-glass-invite-time">00:00</strong>
-      </div>
-    </div>
-  </div>
-
-  <!-- Скляний шар 2 (нижній попап) -->
-  <div class="popup-glass-pane">
-    <div class="popup-glass-content" id="js-glass-content-2">
-      <!-- Дублюємо контент для другого шару (синхронізується через JS) -->
-    </div>
-  </div>
-
-</div>
-
-<!-- Мобільна назва ленду під "склом" -->
-<div class="mobile-title-under-glass" id="js-mobile-title-under-glass">
-  <span id="js-mobile-title-text">Козацький серіал</span>
 </div>
 
 <div class="wrapper">
 
   <div class="sidebar">
     <div class="sidebar-sticky">
-      <div class="ad" id="ad-left"></div>
+      <div class="ad" id="ad-left">
+        <!-- Adsterra: вставити код банера 160×600 -->
+      </div>
     </div>
   </div>
 
@@ -77,18 +43,7 @@
         </div>
         <p class="fb-post-text" id="js-post-text"></p>
 
-        <div class="video-container" style="position: relative;">
-          <div id="js-thanks-overlay" style="display: none; position: absolute; inset: 0; z-index: 11; background: rgba(15, 15, 15, 0.95); align-items: center; justify-content: center; padding: 20px; text-align: center; border: 2px solid gold; border-radius: inherit;">
-            <div style="color: #fff; font-family: sans-serif;">
-              <h4 style="color: gold; margin: 0 0 10px 0; font-size: 18px;">Дякуємо за допомогу! ❤️</h4>
-              <p style="font-size: 13px; margin: 0 0 15px 0; color: #ccc; line-height: 1.5;">Ти успішно підтримав козацький серіал рекламним переглядом.</p>
-              <div style="background: #222; padding: 8px 15px; border-radius: 6px; display: inline-block; border: 1px solid #444;">
-                <span style="font-size: 11px; color: #888; display: block;">Запрошуємо на наступну серію завтра о:</span>
-                <span id="js-tomorrow-time-thanks" style="font-size: 18px; font-weight: bold; color: gold;">00:00</span>
-              </div>
-            </div>
-          </div>
-
+        <div class="video-container">
           <iframe
             id="js-youtube-player"
             src="https://www.youtube.com/embed/iIcqtIL6XqU?rel=0&modestbranding=1&showinfo=0&enablejsapi=1"
@@ -133,15 +88,15 @@
 
   <div class="sidebar">
     <div class="sidebar-sticky">
-      <div class="ad" id="ad-right"></div>
+      <div class="ad" id="ad-right">
+        <!-- Adsterra: вставити код банера 160×600 -->
+      </div>
     </div>
   </div>
 
 </div>
 
 <div class="sticky" id="js-sticky"></div>
-
-<script>(function(s){s.dataset.zone='11040513',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 
 <script src="main.js"></script>
 

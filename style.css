@@ -83,98 +83,9 @@ body {
   text-align: center;
   width: 100%;
 }
-.adblock-msg .adblock-icon { font-size: 24px; }
 .adblock-msg p { margin: 0; font-size: 11px; line-height: 1.5; color: #aaa; }
 .adblock-msg strong { color: gold; }
 .adblock-msg--sticky { font-size: 13px; color: #ccc; padding: 6px; }
-
-/* ===== POPUP GLASS — "скло" поверх двох попапів ===== */
-/*
-  ВАЖЛИВО: z-index 2147483647 — максимально можливий,
-  щоб гарантовано перекрити будь-які рекламні iframe/попапи Monetag.
-  Структура: єдиний реальний div (не псевдоелементи),
-  щоб .popup-glass-inner був надійно поверх.
-*/
-.popup-glass {
-  position: fixed;
-  top: 16px;
-  right: 8px;
-  width: 204px;
-  /* z-index і display задані inline в HTML — не перевизначаємо тут */
-  flex-direction: column;
-  gap: 6px;
-  pointer-events: none;
-  isolation: isolate;    /* власний stacking context, незалежний від батьків */
-}
-
-/* Режим блокування кліків (після 24год) */
-.popup-glass.is-blocking {
-  pointer-events: all;
-  cursor: default;
-}
-
-/* Кожен із двох "скляних" шарів — реальний div (не ::before/::after) */
-.popup-glass-pane {
-  width: 100%;
-  height: 78px;          /* висота одного рекламного попапу зі скріншота */
-  background: rgba(12, 12, 12, 0.88);
-  border: 1.5px solid rgba(255, 215, 0, 0.4);
-  border-radius: 10px;
-  position: relative;    /* для абсолютного позиціювання дітей */
-  overflow: hidden;
-}
-
-/* Контент подяки — поверх скляного шару */
-.popup-glass-content {
-  position: absolute;
-  inset: 0;
-  display: none;         /* показується тільки після повернення фокусу */
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 10px;
-  text-align: center;
-  gap: 4px;
-}
-.popup-glass-content.is-active {
-  display: flex;
-}
-
-.popup-glass-content h4 {
-  color: gold;
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.3;
-  font-family: Arial, sans-serif;
-}
-.popup-glass-content p {
-  font-size: 10px;
-  color: #ccc;
-  margin: 0;
-  line-height: 1.3;
-  font-family: Arial, sans-serif;
-}
-.popup-glass-time {
-  background: #1a1a1a;
-  padding: 3px 8px;
-  border-radius: 5px;
-  border: 1px solid #444;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  flex-shrink: 0;
-}
-.popup-glass-time span {
-  font-size: 10px;
-  color: #888;
-  font-family: Arial, sans-serif;
-}
-.popup-glass-time strong {
-  font-size: 14px;
-  font-weight: bold;
-  color: gold;
-  font-family: Arial, sans-serif;
-}
 
 /* ===== TYPOGRAPHY ===== */
 h1 { text-align: center; color: gold; }
@@ -252,52 +163,10 @@ h1 { text-align: center; color: gold; }
   z-index: 999;
 }
 
-/* ===== MOBILE TITLE UNDER GLASS ===== */
-.mobile-title-under-glass {
-  display: none;
-  text-align: center;
-  color: gold;
-  font-size: 16px;
-  font-weight: bold;
-  font-family: Arial, sans-serif;
-  padding: 6px 16px 4px;
-  background: #0f0f0f;
-  border-bottom: 1px solid #222;
-}
-
 /* ===== MOBILE ===== */
 @media (max-width: 900px) {
   .wrapper { display: block; }
   .sidebar { display: none; }
   .content { margin: 0; max-width: 100%; }
   .sticky  { display: none !important; }
-
-  /* На мобільних "скло" — зверху на всю ширину */
-  .popup-glass {
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    padding: 4px 8px 0;
-    gap: 4px;
-  }
-
-  .popup-glass-pane {
-    height: 70px;
-  }
-
-  /* Назва ленду під склом — фіксована */
-  .mobile-title-under-glass {
-    position: fixed;
-    top: calc(70px * 2 + 4px + 4px + 4px);
-    left: 0;
-    right: 0;
-    z-index: 2147483646;
-    display: block;
-  }
-
-  /* Контент зсувається вниз щоб не перекривався склом */
-  body.has-popup-glass .content {
-    padding-top: calc(70px * 2 + 4px + 4px + 34px + 20px);
-  }
 }

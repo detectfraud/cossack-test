@@ -502,4 +502,18 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnEn) btnEn.addEventListener('click', () => setLang('en'));
 });
 
-// Старт виконується всередині DOMContentLoaded вище
+// =============================================
+// ПОДВІЙНИЙ ЗАХИСТ СТАРТУ
+// DOMContentLoaded міг вже спрацювати до завантаження скрипта
+// (GitHub Pages CDN, кеш) — тоді запускаємо одразу
+// =============================================
+if (document.readyState === 'loading') {
+  // DOM ще вантажиться — чекаємо події
+  // (вже є listener всередині DOMContentLoaded вище)
+} else {
+  // DOM вже готовий (скрипт завантажився пізно) — запускаємо одразу
+  const _s = localStorage.getItem('lang');
+  const _u = new URLSearchParams(window.location.search).get('lng');
+  const _l = _s || _u || 'uk';
+  setLang(I18N[_l] ? _l : 'uk');
+}

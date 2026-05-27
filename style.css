@@ -51,16 +51,10 @@ body {
 .lang-switcher {
   position: fixed;
   top: 12px;
-  left: 16px;
+  right: 16px;
   z-index: 1000;
   display: flex;
   gap: 6px;
-  /* Якщо лічильник активний — JS додає клас .has-counter до body,
-     і lang-switcher зсувається правіше */
-  transition: left 0.2s;
-}
-body.has-counter .lang-switcher {
-  left: 160px; /* відступ від лічильника */
 }
 .lang-btn {
   padding: 5px 10px;
@@ -303,10 +297,5 @@ h1 { text-align: center; color: gold; }
   .content { margin: 0; max-width: 100%; }
   .sticky  { display: none !important; }
   .donate-smart-btn { width: 100%; }
-  body.has-counter .lang-switcher { left: 16px; }
-  /* На мобільних лічильник іде праворуч щоб не перекривати кнопки */
-  .counter-box {
-    left: auto;
-    right: 15px;
-  }
+  /* Лічильник на мобільних — зліва, кнопки мови справа, не конфліктують */
 }

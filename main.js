@@ -296,10 +296,14 @@ function setLang(lang) {
   const liKeys = ['land_li1','land_li2','land_li3','land_li4','land_li5','land_li6','land_li7'];
   listItems.forEach((li, i) => { if (liKeys[i]) li.textContent = t[liKeys[i]]; });
 
-  // Статистика поста
+  // Статистика поста і автор
   set('js-likes',    POST_CONFIG.likes);
   set('js-comments', POST_CONFIG.comments);
   set('js-shares',   POST_CONFIG.shares);
+  const _author = document.getElementById('js-author-name');
+  if (_author) _author.textContent = 'Kozak-Veselun';
+  const _date = document.getElementById('js-post-date');
+  if (_date) _date.textContent = '21 травня';
 
   // Кнопки мови
   const btnUk = document.getElementById('btn-uk');
@@ -367,8 +371,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const neverShowCb     = document.getElementById('js-never-show-cb');
   const adminClearBtn   = document.getElementById('js-admin-clear-btn');
 
-  // Повторний рендер через 100мс (щоб стан кнопок відповідав localStorage)
-  setTimeout(() => setLang(window._currentLang || 'uk'), 100);
+  // Визначаємо мову і рендеримо — тут DOM вже точно готовий
+  const _saved   = localStorage.getItem('lang');
+  const _urlLang = new URLSearchParams(window.location.search).get('lng');
+  const _lang    = (_saved || _urlLang || 'uk');
+  setLang(I18N[_lang] ? _lang : 'uk');
 
   // --- Виконання рекламного донату ---
   function executeAdDonation() {
@@ -495,12 +502,4 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnEn) btnEn.addEventListener('click', () => setLang('en'));
 });
 
-// =============================================
-// СТАРТ
-// =============================================
-(function () {
-  const saved    = localStorage.getItem('lang');
-  const urlLang  = new URLSearchParams(window.location.search).get('lng');
-  const detected = saved || urlLang || 'uk';
-  setLang(I18N[detected] ? detected : 'uk');
-})();
+// Старт виконується всередині DOMContentLoaded вище

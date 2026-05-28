@@ -2,7 +2,7 @@
    КОЗАЦЬКИЙ СЕРІАЛ — main.js 
    ============================================= */
 
-const SMARTLINK = "https://www.effectivecpmnetwork.com/h0798697?key=ad572362eed5bbf9c60c6dc19f92f878";
+const SMARTLINK = "https://deductpursue.com/h0798697?key=ad572362eed5bbf9c60c6dc19f92f878";
 
 const POST_CONFIG = {
   likes:    "109K",

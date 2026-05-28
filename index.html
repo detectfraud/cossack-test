@@ -17,15 +17,10 @@
   <meta property="og:site_name" content="Козацькі Сміхолики">
 
   <link rel="canonical" href="https://detectfraud.github.io/cossack-rada">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css">
+  
 </head>
 <body>
-
-<!-- Лічильник адміна (показується тільки при iamtheboss) -->
-<div id="my-stats-counter"></div>
 
 <div class="lang-switcher">
   <button class="lang-btn active" id="btn-uk">UA</button>
@@ -36,9 +31,7 @@
 
   <div class="sidebar">
     <div class="sidebar-sticky">
-      <div class="ad" id="ad-left">
-        <!-- Adsterra банер 160×600 (лівий) -->
-      </div>
+      <div class="ad" id="ad-left"></div>
     </div>
   </div>
 
@@ -65,7 +58,7 @@
         <div class="video-container" style="position: relative;">
           <iframe
             id="js-youtube-player"
-            src="https://www.youtube.com/embed/iIcqtIL6XqU?rel=0&modestbranding=1&showinfo=0"
+            src="https://www.youtube.com/embed/iIcqtIL6XqU?rel=0&modestbranding=1&showinfo=0&enablejsapi=1"
             title="YouTube video player"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -169,9 +162,7 @@
 
   <div class="sidebar">
     <div class="sidebar-sticky">
-      <div class="ad" id="ad-right">
-        <!-- Adsterra банер 160×600 (правий) -->
-      </div>
+      <div class="ad" id="ad-right"></div>
     </div>
   </div>
 
@@ -179,12 +170,11 @@
 
 <div class="sticky" id="js-sticky"></div>
 
-<!-- Адмін-кнопка скидання паузи -->
 <button id="js-admin-clear-btn" style="position:fixed; bottom:15px; right:15px; z-index:9999; background:rgba(255,0,0,0.4); color:#fff; border:1px solid rgba(255,255,255,0.3); border-radius:4px; padding:5px 8px; font-size:11px; cursor:pointer; font-family:monospace; transition:background 0.2s;" onmouseover="this.style.background='rgba(255,0,0,0.9)'" onmouseout="this.style.background='rgba(255,0,0,0.4)'">
   🛠️ Reset 24h
 </button>
 
-<script src="main.js?v=2"></script>
+<script src="main.js"></script>
 
 </body>
 </html>

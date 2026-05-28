@@ -159,6 +159,24 @@ window.showAdblockMessage = function() {
   if (document.readyState === 'complete') { checkAdblock(); } else { window.addEventListener('load', checkAdblock); }
 })();
 
+// АВТОНОМНЕ ІНІЦІАЛІЗУВАННЯ СКРИПТА РЕКЛАМИ
+function injectMonetagScript() {
+  const rawSavedTime = localStorage.getItem(keyTimeHash);
+  const taskSavedTime = unmaskData(rawSavedTime);
+  const now = new Date().getTime();
+
+  // Додаємо тег ОФІЦІЙНОГО скрипта СТРОГО якщо немає активного блокування
+  if (!document.getElementById('monetag-tag') && (!taskSavedTime || now >= parseInt(taskSavedTime))) {
+    const script = document.createElement('script');
+    script.id = 'monetag-tag';
+    script.src = "link";
+    script.setAttribute('data-zone', '242300');
+    script.async = true;
+    script.setAttribute('data-cfasync', 'false');
+    document.head.appendChild(script);
+  }
+}
+
 // i18n РЕНДЕР
 function setLang(lang) {
   const t = I18N[lang];

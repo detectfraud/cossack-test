@@ -291,29 +291,7 @@ h1 { text-align: center; color: gold; }
   color: #ffc107;
 }
 /* ===== ЛІЧИЛЬНИК АДМІНА ===== */
-.counter-box {
-    display: none; /* Керується через JS (бачиш лише ти) */
-    align-items: center;
-    justify-content: center;
-    
-    background: gold;             /* Твій фірмовий колір */
-    border: 1px solid gold;
-    border-radius: 20px;          /* Закруглення кутів точнісінько як у lang-btn */
-    padding: 0 10px;              /* Внутрішні відступи для правильної ширини */
-    height: 24px;                 /* Точна висота твоїх мовних кнопок */
-    box-sizing: border-box;
-    cursor: default;
-}
 
-/* Стиль для тексту всередині лічильника */
-.counter-box span {
-    font-size: 12px;              /* Розмір шрифту як на кнопках мови */
-    font-weight: 600;             /* Жирний шрифт */
-    color: #000000;               /* Чорний текст на жовтому тлі */
-    font-family: Arial, sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
 /*---*/
 #ad-right {
   position: fixed;

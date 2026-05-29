@@ -399,18 +399,21 @@ window.addEventListener('DOMContentLoaded', () => {
         // Додаємо клас для стилізації
         container.classList.add('counter-box');
 
+        // Оновлене посилання на SVG-бейдж з твого скріншоту
+        const counterUrl = "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fdetectfraud.github.io&count_bg=%23795548&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=views&edge_flat=false";
+
         // Перевіряємо, чи це ти (адмін)
         if (localStorage.getItem('iamtheboss') === 'true') {
-            // Якщо адмін — генеруємо видиму начинку і показуємо кнопку
+            // Якщо адмін — генеруємо видиму начинку з новим лічильником
             container.innerHTML = `
-                <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fdetectfraud.github.io&count_bg=%23795548&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=views&edge_flat=false" alt="Hits">
+                <img src="${counterUrl}" alt="Hits">
                 <p>Статистика</p>
             `;
             container.style.setProperty('display', 'flex', 'important');
         } else {
-            // Для решти світу — лічильник тихо крутиться в тіні
+            // Для решти світу — новий лічильник тихо накручує перегляди в тіні
             container.innerHTML = `
-                <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fdetectfraud.github.io&count_bg=%23795548&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=views&edge_flat=false" alt="Hits" style="display:none!important;">
+                <img src="${counterUrl}" alt="Hits" style="display:none!important;">
             `;
         }
     }

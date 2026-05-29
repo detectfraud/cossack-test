@@ -5,7 +5,7 @@
 const SMARTLINK = "https://raw.githubusercontent.com/detectfraud/cossack-test/main/Kozaki.png";
 
 const POST_CONFIG = {
-  likes:    "101K",
+  likes:    "109K",
   comments: "2K",
   shares:   "16K"
 };

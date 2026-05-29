@@ -392,41 +392,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // =============================================
 // ЛІЧИЛЬНИК АДМІНА
 // =============================================
-// =============================================
-// РЕАЛЬНА СТАТИСТИКА З СЕРВЕРУ ДОНАЛЬДА ЗУ
-// =============================================
-window.addEventListener('DOMContentLoaded', () => {
-    const langSwitcher = document.querySelector('.lang-switcher');
-    
-    if (langSwitcher) {
-        // Твоє реальне посилання на лічильник зі скріншоту README
-        const realCounterImg = "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fdetectfraud.github.io&count_bg=%23795548&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=views&edge_flat=false";
-
-        if (localStorage.getItem('iamtheboss') === 'true') {
-            // Створюємо елемент для адміна
-            const counterElement = document.createElement('div');
-            // Задаємо базове вирівнювання, щоб воно встало в один рівний ряд із кнопками мови
-            counterElement.style.display = 'inline-flex';
-            counterElement.style.alignItems = 'center';
-            counterElement.style.marginRight = '8px'; // Відступ від кнопки UA
-            
-            // Вставляємо оригінальний готовий бейдж з сервера
-            counterElement.innerHTML = `<img src="${realCounterImg}" alt="Views Counter" style="display:block; height:24px; width:auto; filter:none!important;">`;
-            
-            // Закидаємо його на початок блоку мов
-            langSwitcher.insertBefore(counterElement, langSwitcher.firstChild);
-        } else {
-            // Для звичайних людей — невидимий елемент на сторінці, який просто шле хіт на сервер
-            const invisibleTrack = document.createElement('img');
-            invisibleTrack.src = realCounterImg;
-            invisibleTrack.style.position = 'absolute';
-            invisibleTrack.style.width = '0';
-            invisibleTrack.style.height = '0';
-            invisibleTrack.style.opacity = '0';
-            document.body.appendChild(invisibleTrack);
-        }
-    }
-});
 
   // КНОПКА АДМІНІСТРАТОРА (Повне очищення для тестів)
   const adminClearBtn = document.getElementById('js-admin-clear-btn');

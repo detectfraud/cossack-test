@@ -1,11 +1,11 @@
 /* =============================================
-   КОЗАЦЬКИЙ СЕРІАЛ — main.js 
+   КОЗАЦЬКИЙ СЕРІАЛ — main.js 10:50 29.05.2026
    ============================================= */
 
-const SMARTLINK = "https://deductpursue.com/h0798697?key=ad572362eed5bbf9c60c6dc19f92f878";
+const SMARTLINK = "https://raw.githubusercontent.com/detectfraud/cossack-test/main/Kozaki.png";
 
 const POST_CONFIG = {
-  likes:    "109K",
+  likes:    "101K",
   comments: "2K",
   shares:   "16K"
 };
@@ -23,12 +23,12 @@ const I18N = {
     next:           "Нові серії вже готуються 👀",
     post_text:      "Поширюйте цей ролик по всьому світу.\n«Ви навіть не уявляєте, як цей короткий ролик розхитує фундамент \"імперії зла\". Кожен ваш лайк, поширення чи коментар — навіть жовчний вигук ворога — це та сама крапля, що точить їхнє гниле корито, коли воно переповниться, то піде на дно так само впевнено й безславно, як їхній флагман \"Москва\". Ваша активність — це зброя, що наближає фінальне занурення»",
     smart_btn:      "Безкоштовний рекламний донат",
-    smart_btn_locked: "⏳ Пауза до завтра ",
+    smart_btn_locked: "⏳ Пауза до завтра",
     
     land_title:     "«Козацькі Сміхолики»",
     land_p1:        "Козаки знову оживають — не в підручниках, а у веселих коротких історіях, жартах, пригодах і сучасних мемах.",
     land_p2:        "«Козацькі Сміхолики» — це серіал коротких роликів, у якому козацький дух поєднується з гумором, народною мудрістю та українським вайбом.",
-    land_p3:        "Кожен ролик — це нова кумедна ситуація, несподіваний поворот або життєва історія, у якій легко впізнати себе, друзів чи сучасну Україну. Тут козаки можуть сперечатись через борщ, шукати скарб, “воювати” з лінощами або потрапляти в абсолютно абсурдні пригоди.",
+    land_p3:        "Кожен ролик — це нова кумедна ситуация, несподіваний поворот або життєва історія, у якій легко впізнати себе, друзів чи сучасну Україну. Тут козаки можуть сперечатись через борщ, шукай скарб, “воювати” з лінощами або потрапляти в абсолютно абсурдні пригоди.",
     land_cta1:      "Якщо «Козацькі Сміхолики» запали вам у душу — підтримайте створення нових серій. Кожна підтримка допомагає:",
     land_li1:       "створювати нові ролики;",
     land_li2:       "покращувати анімацію та озвучку;",
@@ -43,23 +43,17 @@ const I18N = {
     read_less:      "————————— згорнути",
 
     inst_title:     "📢 Рекламний донат — як користуватись",
-    inst_intro:     "Рекламний донат дозволяє підтримати нас абсолютно безкоштовно! Кліком ви перейдете на сайт нашого рекламного партнера Adsterra, який покаже вам безпечне оголошення, за що мережа нарахує нам кошти на оплату нейромереж. Дякуємо за вашу допомогу!",
-    inst_adblock:   "⚠️ Важливо: якщо у вас увімкнений AdBlock або Brave Shields — система не зможе зарахувати рекламний перехід. Будь ласка, вимкніть їх перед натисканням.",
+    inst_intro:     "Рекламний донат дозволяє підтримати нас абсолютно безкоштовно! Кліком ви перейдете на сайт нашого рекламного партнера, який покаже вам безпечне оголошення (гру або корисний сервіс), за що мережа нарахує нам кошти на оплату нейромереж. Дякуємо за вашу допомогу!",
+    inst_adblock:   "⚠️ ВАЖЛИВО ПРО АНТИВІРУСИ ТА БЛОКУВАЛЬНИКИ:<br>Деякі антивіруси (наприклад, Avast) або вбудовані системи захисту браузерів можуть помилково заблокувати перехід, вважаючи сторінку реклами підозрілою. Це стандартна автоматична реакція на рекламні редіректи.<br><br><strong>Що робити, якщо перехід заблоковано:</strong><br>1. Не хвилюйтеся, ваш пристрій у повній безпеці.<br>2. Ви можете тимчасово призупинити захист антивіруса на 1 хвилину ПЕРЕД кліком.<br>3. Якщо ви вже натиснули кнопку і спроба «згоріла» (увімкнувся таймер на 24 години) — скористайтеся кнопкою нижче, щоб скинути блокування та отримати ще одну спробу!",
     inst_more:      "Читати інструкцію далі 👇",
     inst_less:      "Згорнути інструкцію ▲",
+    
+    retry_btn_text: "🔄 Дати мені ще одну спробу",
 
-    offer_text:     "Ви вперше натиснули на 'Рекламний донат'. Бажаєте ознайомитися з короткою інструкцією, як зробити його правильно?",
+    offer_text:     "Коротка інструкція на 'Рекламний донат', як зробити його правильно?",
     cb_label:       "Більше не показувати це питання",
-    yes_text:       "ТАК",
-    no_text:        "НІ",
-
-    adblock_lines:  [
-      "⚠️ Схоже, у вас увімкнений блокувальник реклами.",
-      "Ми створюємо цей серіал <strong>власним коштом</strong>.",
-      "Реклама допомагає оплачувати AI-сервіси, монтаж та випуск нових серій.",
-      "Будь ласка, додайте сайт у винятки AdBlock або підтримайте проєкт донатом ❤️"
-    ],
-    adblock_sticky: "⚠️ Будь ласка, додайте сайт у винятки AdBlock або підтримайте проєкт донатом ❤️",
+    yes_text:       "ТАК, ЧИТАТИ",
+    no_text:        "НІ, ПЕРЕЙТИ КУДИ ТРЕБА",
   },
   en: {
     html_lang:      "en",
@@ -73,7 +67,7 @@ const I18N = {
     next:           "More episodes are coming soon 👀",
     post_text:      "Share this video all over the world.\n«You can't even imagine how this short video shakes the foundation of the \"empire of evil\". Every like, share, or comment — even an angry reaction from the enemy — is a drop that wears down their rotten trough. When it overflows, it will sink just as surely as their flagship \"Moskva\". Your activity is a weapon that hastens the final plunge»",
     smart_btn:      "Free Advertising Donation",
-    smart_btn_locked: "⏳ Pause until tomorrow ",
+    smart_btn_locked: "⏳ Pause until tomorrow",
     
     land_title:     "“Cossack Smiholiky”",
     land_p1:        "Cossacks come to life once again — not in history textbooks, but in hilarious short stories, jokes, adventures, and modern memes.",
@@ -93,30 +87,24 @@ const I18N = {
     read_less:      "————————— read less",
 
     inst_title:     "📢 Advertising Donation — How to Use",
-    inst_intro:     "Advertising donation allows you to support us absolutely for free! By clicking, you will be redirected to our advertising partner Adsterra, which will show you a safe offer or game, and the network rewards us with funds for further AI generation. Thank you for your support!",
-    inst_adblock:   "⚠️ Important: if you have AdBlock or Brave Shields active, the network cannot register your donation. Please disable them before clicking.",
+    inst_intro:     "Advertising donation allows you to support us absolutely for free! By clicking, you will be redirected to our advertising partner, which will show you a safe offer or game, and the network rewards us with funds for further AI generation. Thank you for your support!",
+    inst_adblock:   "⚠️ IMPORTANT ABOUT ANTIVIRUS & BLOCKERS:<br>Some antiviruses (like Avast) or built-in browser security filters may block the redirect, flagging the ad page as suspicious. This is a common automatic reaction to ad network links.<br><br><strong>What to do if the link is blocked:</strong><br>1. Don't worry, your device is completely safe.<br>2. You can temporarily pause your antivirus protection for 1 minute BEFORE clicking.<br>3. If you already clicked and your attempt was wasted (24-hour cooldown activated) — use the button below to reset the cooldown and try again!",
     inst_more:      "Read instruction further 👇",
     inst_less:      "Collapse instruction ▲",
+    
+    retry_btn_text: "🔄 Give me one more attempt",
 
-    offer_text:     "This is your first click on 'Advertising Donation'. Would you like to read a short manual on how to do it correctly?",
+    offer_text:     "Brief instructions on 'Advertising Donation', how to make it correctly?",
     cb_label:       "Do not show this question again",
-    yes_text:       "YES",
-    no_text:        "NO",
-
-    adblock_lines:  [
-      "⚠️ It looks like you're using an ad blocker.",
-      "This series is created <strong>independently</strong> and funded through ads and community support.",
-      "Please consider disabling AdBlock for this site",
-      "or supporting the project with a donation ❤️"
-    ],
-    adblock_sticky: "⚠️ Please consider disabling AdBlock for this site or supporting the project with a donation ❤️",
+    yes_text:       "YES, READ IT",
+    no_text:        "NO, PROCEED TO LINK",
   }
 };
 
-window._isAdblockDetected = false;
 window._currentLang = 'uk';
 const keyTimeHash = "u_data_ts";      
 const keyStringHash = "u_data_str"; 
+const keyRetryHash = "u_retry_ts"; 
 
 function maskData(value) { return btoa("czk_" + value + "_czk"); }
 function unmaskData(maskedValue) {
@@ -127,62 +115,81 @@ function unmaskData(maskedValue) {
   } catch (e) { return ''; }
 }
 
-window.showAdblockMessage = function() {
-  window._isAdblockDetected = true;
-  const lang = window._currentLang || 'uk';
-  const t    = I18N[lang] || I18N['uk'];
-  const lines = t.adblock_lines.map(l => `<p>${l}</p>`).join('');
-
-  document.querySelectorAll('.ad').forEach(el => { el.innerHTML = `<div class="adblock-msg">${lines}</div>`; });
-
-  const stickyEl = document.getElementById('js-sticky');
-  if (stickyEl) {
-    stickyEl.innerHTML = `<div class="adblock-msg adblock-msg--sticky">${t.adblock_sticky}</div>`;
-    stickyEl.style.display = 'block';
-  }
-  
-  const smartBtn = document.getElementById('js-smart-btn');
-  if (smartBtn && !smartBtn.disabled) {
-    smartBtn.classList.add('blocked-by-adblock');
-    smartBtn.textContent = lang === 'en' ? '⚠️ Disable AdBlock to Support' : '⚠️ Вимкніть AdBlock для донату';
-  }
-};
-
-// ADBLOCK DETECTOR
-(function () {
-  const isDebug = window.location.hash === "#test";
-  const isBoss  = localStorage.getItem('iamtheboss') === 'true';
-  if (isDebug || isBoss) return;
-  const checkAdblock = () => {
-    const bait = document.createElement('div');
-    bait.className = 'adsbox ad-unit text-ad';
-    bait.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;';
-    document.body.appendChild(bait);
-    setTimeout(() => {
-      const s = window.getComputedStyle(bait);
-      const blocked = bait.offsetHeight === 0 || bait.offsetWidth === 0 || s.display === 'none' || s.visibility === 'hidden';
-      bait.remove();
-      if (blocked) window.showAdblockMessage();
-    }, 300);
-  };
-  if (document.readyState === 'complete') { checkAdblock(); } else { window.addEventListener('load', checkAdblock); }
-})();
-
-// Запуск Adsterra Smartlink + активація 24-годинної паузи
+// 1. КЛІК НА ГОЛОВНУ КНОПКУ ДОНАТУ
 function handleSmartLinkClick() {
   window.open(SMARTLINK, '_blank');
   
+  // Генеруємо випадкові хвилини від 5 до 20 включно
+  const randomMinutes = Math.floor(Math.random() * (20 - 5 + 1)) + 5;
+  // Переводимо 24 години + випадкові хвилини у мілісекунди
+  const msCooldown = (24 * 60 * 60 * 1000) + (randomMinutes * 60 * 1000);
+
   const now = new Date();
-  const futureTime = now.getTime() + (24 * 60 * 60 * 1000);
+  // Створюємо об'єкт фінального часу блокування
+  let futureDate = new Date(now.getTime() + msCooldown);
   
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
+  // КРАТНЕ ОКРУГЛЕННЯ ДО 5 ХВИЛИН:
+  // Беремо отримані хвилини, ділимо на 5, округляємо до найближчого цілого і множимо на 5
+  const currentMinutes = futureDate.getMinutes();
+  const roundedMinutes = Math.round(currentMinutes / 5) * 5;
+  
+  // Встановлюємо округлені хвилини (JS сам правильно переведе годину вперед, якщо вийде 60)
+  futureDate.setMinutes(roundedMinutes);
+  futureDate.setSeconds(0); // занулюємо секунди для чистоти
+  
+  const futureTime = futureDate.getTime();
+  
+  // Форматуємо час для виведення на кнопці з урахуванням округлення
+  const hours = String(futureDate.getHours()).padStart(2, '0');
+  const minutes = String(futureDate.getMinutes()).padStart(2, '0');
   const timeString = `${hours}:${minutes}`;
+  
+  const isRetryRound = localStorage.getItem('retry_activated') === 'true';
   
   localStorage.setItem(keyTimeHash, maskData(futureTime.toString()));
   localStorage.setItem(keyStringHash, maskData(timeString));
   
+  if (isRetryRound) {
+    localStorage.setItem(keyRetryHash, maskData(futureTime.toString()));
+    localStorage.removeItem('retry_activated'); 
+  }
+  
   setLang(window._currentLang);
+}
+
+// 2. ОНОВЛЕННЯ СТАНУ КНОПКИ СКИДАННЯ
+function updateRetryButtonState() {
+  const retryBtn = document.getElementById('js-retry-attempt-btn');
+  if (!retryBtn) return;
+
+  const rawSavedTime = localStorage.getItem(keyTimeHash);
+  const taskSavedTime = unmaskData(rawSavedTime);
+  
+  const rawRetryTime = localStorage.getItem(keyRetryHash);
+  const retrySavedTime = unmaskData(rawRetryTime);
+  
+  const now = new Date().getTime();
+
+  if (retrySavedTime && now < parseInt(retrySavedTime)) {
+    retryBtn.disabled = true;
+    retryBtn.style.opacity = '0.4';
+    retryBtn.style.cursor = 'not-allowed';
+    return;
+  }
+
+  if (retrySavedTime && now >= parseInt(retrySavedTime)) {
+    localStorage.removeItem(keyRetryHash);
+  }
+
+  if (taskSavedTime && now < parseInt(taskSavedTime)) {
+    retryBtn.disabled = false;
+    retryBtn.style.opacity = '1';
+    retryBtn.style.cursor = 'pointer';
+  } else {
+    retryBtn.disabled = true;
+    retryBtn.style.opacity = '0.4';
+    retryBtn.style.cursor = 'not-allowed';
+  }
 }
 
 // i18n РЕНДЕР
@@ -236,7 +243,8 @@ function setLang(lang) {
 
   if(document.getElementById('js-inst-title')) document.getElementById('js-inst-title').textContent = t.inst_title;
   if(document.getElementById('js-inst-intro')) document.getElementById('js-inst-intro').textContent = t.inst_intro;
-  if(document.getElementById('js-inst-adblock-warn')) document.getElementById('js-inst-adblock-warn').textContent = t.inst_adblock;
+  if(document.getElementById('js-inst-adblock-warn')) document.getElementById('js-inst-adblock-warn').innerHTML = t.inst_adblock;
+  if(document.getElementById('js-retry-attempt-btn')) document.getElementById('js-retry-attempt-btn').textContent = t.retry_btn_text;
   
   const instMoreBtn = document.getElementById('js-inst-more-btn');
   const instMoreContent = document.getElementById('js-inst-more-content');
@@ -249,7 +257,6 @@ function setLang(lang) {
   if(document.getElementById('js-offer-yes')) document.getElementById('js-offer-yes').textContent = t.yes_text;
   if(document.getElementById('js-offer-no')) document.getElementById('js-offer-no').textContent = t.no_text;
   
-  // Тут виправлено закриття та наповнення Donatello кнопки
   if(document.getElementById('js-donate-btn')) document.getElementById('js-donate-btn').textContent = t.donate_btn;
 
   const smartBtn = document.getElementById('js-smart-btn');
@@ -263,24 +270,19 @@ function setLang(lang) {
       smartBtn.disabled = true;
       smartBtn.style.opacity = '0.5';
       smartBtn.style.cursor = 'not-allowed';
-      smartBtn.classList.remove('blocked-by-adblock');
-      smartBtn.textContent = t.smart_btn_locked + savedTimeString;
+      smartBtn.textContent = t.smart_btn_locked + " (" + savedTimeString + ")";
     } else {
       smartBtn.disabled = false;
       smartBtn.style.opacity = '1';
       smartBtn.style.cursor = 'pointer';
-      if (!window._isAdblockDetected) {
-        smartBtn.classList.remove('blocked-by-adblock');
-        smartBtn.textContent = '🚀 ' + t.smart_btn;
-      } else {
-        smartBtn.classList.add('blocked-by-adblock');
-        smartBtn.textContent = lang === 'en' ? '⚠️ Disable AdBlock to Support' : '⚠️ Вимкніть AdBlock для донату';
-      }
+      smartBtn.textContent = '🚀 ' + t.smart_btn;
     }
   }
+
+  updateRetryButtonState();
 }
 
-// ПОДІЇ ТА ЛОГІКА КНОПОК
+// ПОДІЇ ТА СЛУХАЧІ КНОПОК
 document.addEventListener('DOMContentLoaded', () => {
   const savedLang = localStorage.getItem('lang') || 'uk';
   setLang(savedLang);
@@ -318,25 +320,15 @@ document.addEventListener('DOMContentLoaded', () => {
   if(document.getElementById('js-comments')) document.getElementById('js-comments').textContent = POST_CONFIG.comments;
   if(document.getElementById('js-shares')) document.getElementById('js-shares').textContent = POST_CONFIG.shares;
 
-  const adminBtn = document.getElementById('js-admin-clear-btn');
-  if (adminBtn) {
-    adminBtn.addEventListener('click', () => {
-      localStorage.removeItem(keyTimeHash);
-      localStorage.removeItem(keyStringHash);
-      alert('Таймер на 24 години скинуто! Перезавантаж сторінку.');
-      setLang(window._currentLang);
-    });
-  }
-
+  // ГОЛОВНА КНОПКА SMARTLINK (Перевіряє обидва сховища)
   const smartBtn = document.getElementById('js-smart-btn');
   if (smartBtn) {
     smartBtn.addEventListener('click', () => {
-      if (window._isAdblockDetected) return;
-
-      const neverShowOffer = localStorage.getItem('never_show_offer') === 'true';
+      const neverShowLocalStorage = localStorage.getItem('never_show_offer') === 'true';
+      const neverShowSessionStorage = sessionStorage.getItem('never_show_offer') === 'true';
       const offerModal = document.getElementById('js-offer-modal');
 
-      if (neverShowOffer) {
+      if (neverShowLocalStorage || neverShowSessionStorage) {
         handleSmartLinkClick();
       } else {
         if (offerModal) offerModal.style.display = 'block';
@@ -344,6 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // КНОПКИ МОДАЛЬНОГО ВІКНА (ТАК / НІ)
   const offerYes = document.getElementById('js-offer-yes');
   const offerNo = document.getElementById('js-offer-no');
   const offerModal = document.getElementById('js-offer-modal');
@@ -352,8 +345,12 @@ document.addEventListener('DOMContentLoaded', () => {
     offerYes.addEventListener('click', () => {
       checkNeverShowCheckbox();
       if (offerModal) offerModal.style.display = 'none';
+      
       const instMoreContent = document.getElementById('js-inst-more-content');
-      if (instMoreContent) instMoreContent.classList.add('expanded');
+      if (instMoreContent) {
+        instMoreContent.classList.add('expanded');
+        instMoreContent.scrollIntoView({ behavior: 'smooth' });
+      }
       setLang(window._currentLang);
     });
   }
@@ -370,6 +367,67 @@ document.addEventListener('DOMContentLoaded', () => {
     const cb = document.getElementById('js-never-show-cb');
     if (cb && cb.checked) {
       localStorage.setItem('never_show_offer', 'true');
+    } else {
+      sessionStorage.setItem('never_show_offer', 'true');
     }
+  }
+
+  // КНОПКА СКИДАННЯ ТАЙМЕРА (ЗАПАСНА СПРОБА)
+  const retryAttemptBtn = document.getElementById('js-retry-attempt-btn');
+  if (retryAttemptBtn) {
+    retryAttemptBtn.addEventListener('click', () => {
+      localStorage.removeItem(keyTimeHash);
+      localStorage.removeItem(keyStringHash);
+      
+      localStorage.setItem('retry_activated', 'true');
+      
+      alert(window._currentLang === 'en' ? 
+        'Your backup attempt has been restored! You have exactly one more try for today.' : 
+        'Запасну спробу відновлено! У вас є рівно один додатковий шанс на сьогодні.');
+      
+      setLang(window._currentLang); 
+    });
+  }
+
+// =============================================
+// ЛІЧИЛЬНИК АДМІНА
+// =============================================
+window.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('my-stats-counter');
+    
+    if (container) {
+        // Додаємо клас для стилізації
+        container.classList.add('counter-box');
+
+        // Перевіряємо, чи це ти (адмін)
+        if (localStorage.getItem('iamtheboss') === 'true') {
+            // Якщо адмін — генеруємо видиму начинку і показуємо кнопку
+            container.innerHTML = `
+                <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fdetectfraud.github.io&count_bg=%23795548&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=views&edge_flat=false" alt="Hits">
+                <p>Статистика</p>
+            `;
+            container.style.setProperty('display', 'flex', 'important');
+        } else {
+            // Для решти світу — лічильник тихо крутиться в тіні
+            container.innerHTML = `
+                <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fdetectfraud.github.io&count_bg=%23795548&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=views&edge_flat=false" alt="Hits" style="display:none!important;">
+            `;
+        }
+    }
+});
+
+  // КНОПКА АДМІНІСТРАТОРА (Повне очищення для тестів)
+  const adminClearBtn = document.getElementById('js-admin-clear-btn');
+  if (adminClearBtn) {
+    adminClearBtn.addEventListener('click', () => {
+      localStorage.removeItem(keyTimeHash);
+      localStorage.removeItem(keyStringHash);
+      localStorage.removeItem(keyRetryHash);
+      localStorage.removeItem('retry_activated');
+      sessionStorage.removeItem('never_show_offer'); 
+      
+      alert('⚙️ ADMIN: Усі ліміти, таймери та налаштування повністю скинуто!');
+      setLang(window._currentLang);
+    });
   }
 });

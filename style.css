@@ -291,28 +291,14 @@ h1 { text-align: center; color: gold; }
   color: #ffc107;
 }
 /* ===== ЛІЧИЛЬНИК АДМІНА ===== */
-/* Стиль для картинки лічильника всередині жовтої кнопки */
 .counter-box img {
     display: inline-block;
     vertical-align: middle;
-    height: 18px;                 /* Оптимальна висота для бейджа */
+    height: 18px;                 
     width: auto;
-    border-radius: 3px;           /* Легке закруглення самого бейджа */
-    filter: none !important;      /* Прибираємо brightness(0) invert(0), щоб бачити оригінальні цифри */
+    filter: none !important; /* Гарантує, що оригінальні кольори та цифри SVG будуть видимі */
 }
-
-/* Стиль для тексту поруч */
-.counter-box p {
-    margin: 0 0 0 8px;            /* Робимо гарний відступ зліва від картинки */
-    font-size: 11px;              
-    font-weight: bold;            
-    color: #000000;               
-    font-family: sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    display: inline-block;
-    vertical-align: middle;
-}
+/*---*/
 #ad-right {
   position: fixed;
   background: transparent;

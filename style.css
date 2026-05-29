@@ -291,44 +291,27 @@ h1 { text-align: center; color: gold; }
   color: #ffc107;
 }
 /* ===== ЛІЧИЛЬНИК АДМІНА ===== */
-.counter-box {
-    display: none; /* Керується через JS */
-    align-items: center;
-    justify-content: center;
-    
-    /* Фіксація вгорі екрана */
-    position: fixed;
-    top: 10px;           /* Точна відстань від верху, як у кнопок мови */
-    left: 15px;          /* Відстань від лівого краю екрана */
-    z-index: 9999;       /* Поверх усіх елементів сайту */
-
-    /* Фактура та стиль фірмової золотої кнопки */
-    background: gold;          
-    border-radius: 20px;           
-    padding: 0 12px;              
-    height: 28px;                 
-    box-sizing: border-box;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
-    cursor: default;
+/* Стиль для картинки лічильника всередині жовтої кнопки */
+.counter-box img {
+    display: inline-block;
+    vertical-align: middle;
+    height: 18px;                 /* Оптимальна висота для бейджа */
+    width: auto;
+    border-radius: 3px;           /* Легке закруглення самого бейджа */
+    filter: none !important;      /* Прибираємо brightness(0) invert(0), щоб бачити оригінальні цифри */
 }
 
-/* Текст всередині лічильника */
+/* Стиль для тексту поруч */
 .counter-box p {
-    margin: 0 0 0 8px;
-    font-size: 12px;              
+    margin: 0 0 0 8px;            /* Робимо гарний відступ зліва від картинки */
+    font-size: 11px;              
     font-weight: bold;            
     color: #000000;               
     font-family: sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-}
-
-/* Картинка лічильника з hits.seeyoufarm */
-.counter-box img {
-    display: block;
-    height: 16px;                 
-    width: auto;
-    filter: brightness(0) invert(0); /* Залишає картинку контрастною/темною */
+    display: inline-block;
+    vertical-align: middle;
 }
 #ad-right {
   position: fixed;

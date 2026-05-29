@@ -1,5 +1,5 @@
 /* =============================================
-   КОЗАЦЬКИЙ СЕРІАЛ — style.css
+   КОЗАЦЬКИЙ СЕРІАЛ — style.css  10:50 29.05.2026
    ============================================= */
 * { box-sizing: border-box; }
 
@@ -290,7 +290,46 @@ h1 { text-align: center; color: gold; }
   margin-top: 20px;
   color: #ffc107;
 }
+/* ===== ЛІЧИЛЬНИК АДМІНА ===== */
+.counter-box {
+    display: none; /* Керується через JS */
+    align-items: center;
+    justify-content: center;
+    
+    /* Фіксація вгорі екрана */
+    position: fixed;
+    top: 10px;           /* Точна відстань від верху, як у кнопок мови */
+    left: 15px;          /* Відстань від лівого краю екрана */
+    z-index: 9999;       /* Поверх усіх елементів сайту */
 
+    /* Фактура та стиль фірмової золотої кнопки */
+    background: gold;          
+    border-radius: 20px;           
+    padding: 0 12px;              
+    height: 28px;                 
+    box-sizing: border-box;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+    cursor: default;
+}
+
+/* Текст всередині лічильника */
+.counter-box p {
+    margin: 0 0 0 8px;
+    font-size: 12px;              
+    font-weight: bold;            
+    color: #000000;               
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Картинка лічильника з hits.seeyoufarm */
+.counter-box img {
+    display: block;
+    height: 16px;                 
+    width: auto;
+    filter: brightness(0) invert(0); /* Залишає картинку контрастною/темною */
+}
 #ad-right {
   position: fixed;
   background: transparent;
